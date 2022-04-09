@@ -1,8 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
 
-// Twitch client credentials grant flow documentation:
-// https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
+// @resource Twitch client credentials grant flow documentation:
+// @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
 const fetchToken = asyncHandler(async () => {
   try {
     const options = {
@@ -15,12 +15,12 @@ const fetchToken = asyncHandler(async () => {
       return res.data
     }
   } catch (error) {
-    console.log(error)
+    throw new Error('Failed to fetch token')
   }
 })
 
-// Twitch authorization code grant flow documentation:
-// https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
+// @resource Twitch authorization code grant flow documentation:
+// @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
 const authApp = asyncHandler(async () => {
   try {
     const scope = new URLSearchParams()
@@ -38,12 +38,11 @@ const authApp = asyncHandler(async () => {
       scope
     )
     if (res.status == 200) {
-      console.log(`Successfully authorized`.blue.underline)
+      console.log(`Successfully authorized`.blue)
       return res
     }
   } catch (error) {
-    console.log(`Error occuried while authorizing`.red.underline)
-    console.log(error)
+    throw new Error(`Error occuried while authorizing`.red)
   }
 })
 

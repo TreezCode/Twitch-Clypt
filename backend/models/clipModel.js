@@ -1,0 +1,69 @@
+const mongoose = require('mongoose')
+
+const clipSchema = mongoose.Schema(
+  {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+    embed_url: {
+      type: String,
+      required: true,
+    },
+    broadcaster_id: {
+      type: String,
+      required: true,
+    },
+    broadcaster_name: {
+      type: String,
+      required: true,
+    },
+    creator_id: {
+      type: String,
+      required: true,
+    },
+    creator_name: {
+      type: String,
+      required: true,
+    },
+    game_id: {
+      type: String,
+      required: true,
+    },
+    video_id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    view_count: {
+      type: Number,
+      required: true,
+    },
+    created_at: {
+      type: String,
+      required: true,
+    },
+    thumbnail_url: {
+      type: String,
+      required: true,
+    },
+    duration: {
+      type: Number,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+
+module.exports = mongoose.model('Clip', clipSchema)

@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false }))
 // Routes
 app.use('/api/clips', require('./routes/clipRoutes'))
 app.use('/api/topGames', require('./routes/gamesRoutes'))
+app.use('/api/topStreams', require('./routes/streamRoutes'))
 
 // Override Express default error handler
 app.use(errorHandler)
