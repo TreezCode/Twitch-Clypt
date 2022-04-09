@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler')
+const { authApp } = require('../middleware/authMiddleware')
 
 // @desc    Get clips
 // @route   GET /api/clips

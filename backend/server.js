@@ -8,9 +8,6 @@ const port = process.env.PORT || 5000
 // Connect to MongoDB
 connectDB()
 
-// Uninstall later
-const request = require('request')
-
 const app = express()
 
 // Middleware

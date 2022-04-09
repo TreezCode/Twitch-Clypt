@@ -1,7 +1,8 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
 
-// Client credentials grant flow
+// Twitch client credentials grant flow documentation:
+// https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
 const fetchToken = asyncHandler(async () => {
   try {
     const options = {
@@ -18,7 +19,8 @@ const fetchToken = asyncHandler(async () => {
   }
 })
 
-// Authorization code grant flow
+// Twitch authorization code grant flow documentation:
+// https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
 const authApp = asyncHandler(async () => {
   try {
     const scope = new URLSearchParams()
