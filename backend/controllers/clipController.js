@@ -1,27 +1,34 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
+const { findByLogin } = require('../controllers/twitchUserController')
 const Clip = require('../models/clipModel')
 
-// @desc    Get clips
+// @desc    Get clips from Twitch user by name
 // @route   GET /api/clips
 // @access  Private
-const getClips = asyncHandler(async () => {
+const getClips = asyncHandler(async (req, res) => {
   try {
+    const parse = await findByLogin(req, res).then((res) => res)
     const accessToken = await fetchToken().then((res) => res.access_token)
     const options = {
-      'Client-Id': process.env.CLIENT_ID,
-      Authorization: `Bearer ${accessToken}`
+      headers: {
+        'Client-Id': process.env.CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { broadcaster_id: parse },
     }
-    const paramOptions = {
-      
-    }
-    const res = await axios.get(process.env.GET_CLIPS, { headers: options })
-    if (res.status == 200) {
-      return res
+    const response = await axios.get(process.env.GET_CLIPS, options)
+    if (response.status == 200) {
+      console.log(
+        `Check out ${response.data.data[0].broadcaster_name}'s clips!`.yellow
+      )
+      console.log(response.data.data)
+      return res.json(response.data.data)
     }
   } catch (error) {
-    throw new Error ('Failed to get clips')
+    console.log(error)
+    throw new Error('Failed to get clips')
   }
 })
 

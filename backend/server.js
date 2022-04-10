@@ -15,9 +15,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Routes
+app.use('/api/users', require('./routes/userRoutes'))
+app.use('/api/twitch', require('./routes/twitchUserRoutes'))
 app.use('/api/clips', require('./routes/clipRoutes'))
-app.use('/api/topGames', require('./routes/gamesRoutes'))
-app.use('/api/topStreams', require('./routes/streamRoutes'))
+app.use('/api/games', require('./routes/gamesRoutes'))
+app.use('/api/streams', require('./routes/streamRoutes'))
 
 // Override Express default error handler
 app.use(errorHandler)
