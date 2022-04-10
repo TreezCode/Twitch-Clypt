@@ -4,7 +4,7 @@ const { default: axios } = require('axios')
 // @desc Grants app access token
 // @resource Twitch OAuth Client Credentials Grant Flow documentation:
 // @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
-const fetchToken = asyncHandler(async () => {
+const fetchToken = asyncHandler(async (req, res) => {
   try {
     const options = {
       client_id: process.env.CLIENT_ID,
@@ -16,6 +16,7 @@ const fetchToken = asyncHandler(async () => {
       return res.data
     }
   } catch (error) {
+    res.status(401)
     throw new Error('Failed to fetch token')
   }
 })
@@ -23,7 +24,7 @@ const fetchToken = asyncHandler(async () => {
 // @desc Grants user access & refresh token
 // @resource Twitch OAuth Authorization Code Grant Flow documentation:
 // @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
-const authApp = asyncHandler(async () => {
+const authApp = asyncHandler(async (req, res) => {
   try {
     const scope = new URLSearchParams()
     scope.append('scope', 'channel:manage:videos')
@@ -40,19 +41,19 @@ const authApp = asyncHandler(async () => {
       scope
     )
     if (res.status == 200) {
-      console.log(`Successfully authorized`.blue)
-      console.log('authApp: ', res)
+      console.log(`Authorization successful`.blue)
       return res
     }
   } catch (error) {
-    throw new Error(`Error occuried while authorizing`.red)
+    res.status(401)
+    throw new Error(`An error occuried while authorizing`.red)
   }
 })
 
 // @desc Revoke user access token
 // @resource Revoking Access Tokens documentation:
 // @resource https://dev.twitch.tv/docs/authentication/revoke-tokens
-const revokeToken = asyncHandler(async () => {
+const revokeToken = asyncHandler(async (req, res) => {
   try {
     const accessToken = await fetchToken().then((res) => res.access_token)
     const options = {
@@ -61,10 +62,13 @@ const revokeToken = asyncHandler(async () => {
     }
     const response = await axios.post(process.env.REVOKE_TOKEN, options)
     if (response.status == 200) {
-      console.log('Token revocation success'.red)
+      res.status(200)
+      console.log('Token revocation successful'.blue)
     }
   } catch (error) {
     console.log(error)
+    res.status(401)
+    throw new Error('An error occuried while revoking token')
   }
 })
 

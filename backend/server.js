@@ -10,7 +10,7 @@ connectDB()
 
 const app = express()
 
-// Middleware
+// Express middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 

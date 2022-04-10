@@ -17,11 +17,12 @@ const findByLogin = asyncHandler(async (req, res) => {
     }
     const response = await axios.get(process.env.GET_USERS, options)
     if (response.status == 200) {
+      res.status(200)
       return response.data.data[0].id
     }
   } catch (error) {
-    console.log(error)
-    throw new Error('Failed to find Twitch user by login')
+    res.status(400)
+    throw new Error('Failed to load Twitch user by login')
   }
 })
 
@@ -40,11 +41,12 @@ const findById = asyncHandler(async (req, res) => {
     }
     const response = await axios.get(process.env.GET_USERS, options)
     if (response.status == 200) {
-      return response.data.data[0].login
+      res.status(200)
+      return res.json(response.data.data[0].login)
     }
   } catch (error) {
-    console.log(error)
-    throw new Error('Failed to find twitch user by id')
+    res.status(400)
+    throw new Error('Failed to load Twitch user by id')
   }
 })
 

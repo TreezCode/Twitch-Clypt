@@ -9,8 +9,8 @@ const Clip = require('../models/clipModel')
 // @access  Private
 const getClips = asyncHandler(async (req, res) => {
   try {
-    const parse = await findByLogin(req, res).then((res) => res)
-    const accessToken = await fetchToken().then((res) => res.access_token)
+    const accessToken = await fetchToken().then((result) => result.access_token)
+    const parse = await findByLogin(req, res).then((result) => result)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
@@ -24,10 +24,11 @@ const getClips = asyncHandler(async (req, res) => {
         `Check out ${response.data.data[0].broadcaster_name}'s clips!`.yellow
       )
       console.log(response.data.data)
+      res.status(200)
       return res.json(response.data.data)
     }
   } catch (error) {
-    console.log(error)
+    res.status(400)
     throw new Error('Failed to get clips')
   }
 })
