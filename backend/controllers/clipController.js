@@ -10,26 +10,19 @@ const Clip = require('../models/clipModel')
 const getClips = asyncHandler(async (req, res) => {
   try {
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const parse = await findByLogin(req, res).then((result) => result)
+    const parseName = await findByLogin(req, res).then((result) => result)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { broadcaster_id: parse },
+      params: { broadcaster_id: parseName },
     }
     const response = await axios.get(process.env.GET_CLIPS, options)
-    if (response.status == 200) {
-      console.log(
-        `Check out ${response.data.data[0].broadcaster_name}'s clips!`.yellow
-      )
-      console.log(response.data.data)
-      res.status(200)
-      return res.json(response.data.data)
-    }
+    return res.json(response.data.data)
   } catch (error) {
     res.status(400)
-    throw new Error('Failed to get clips')
+    throw new Error('Failed to load clips')
   }
 })
 

@@ -13,13 +13,10 @@ const findByLogin = asyncHandler(async (req, res) => {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { login: req.body.login },
+      params: { login: req.body.text },
     }
     const response = await axios.get(process.env.GET_USERS, options)
-    if (response.status == 200) {
-      res.status(200)
-      return response.data.data[0].id
-    }
+    return response.data.data[0].id
   } catch (error) {
     res.status(400)
     throw new Error('Failed to load Twitch user by login')
@@ -37,13 +34,10 @@ const findById = asyncHandler(async (req, res) => {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { id: req.body.id },
+      params: { id: req.body.text },
     }
     const response = await axios.get(process.env.GET_USERS, options)
-    if (response.status == 200) {
-      res.status(200)
-      return res.json(response.data.data[0].login)
-    }
+    return res.json(response.data.data[0].login)
   } catch (error) {
     res.status(400)
     throw new Error('Failed to load Twitch user by id')

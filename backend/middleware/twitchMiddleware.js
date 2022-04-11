@@ -11,10 +11,8 @@ const fetchToken = asyncHandler(async (req, res) => {
       client_secret: process.env.CLIENT_SECRET,
       grant_type: 'client_credentials',
     }
-    const res = await axios.post(process.env.GET_TOKEN, options)
-    if (res.status == 200) {
-      return res.data
-    }
+    const response = await axios.post(process.env.GET_TOKEN, options)
+    return response.data
   } catch (error) {
     res.status(401)
     throw new Error('Failed to fetch token')
@@ -35,15 +33,13 @@ const authApp = asyncHandler(async (req, res) => {
       client_id: process.env.CLIENT_ID,
       redirect_uri: process.env.REDIRECT_URI,
     }
-    const res = await axios.get(
+    const response = await axios.get(
       process.env.CLIENT_AUTH,
       { params: options },
       scope
     )
-    if (res.status == 200) {
-      console.log(`Authorization successful`.blue)
-      return res
-    }
+    console.log(`Authorization successful`.blue)
+    return response
   } catch (error) {
     res.status(401)
     throw new Error(`An error occuried while authorizing`.red)
@@ -61,10 +57,8 @@ const revokeToken = asyncHandler(async (req, res) => {
       token: `Bearer ${accessToken}`,
     }
     const response = await axios.post(process.env.REVOKE_TOKEN, options)
-    if (response.status == 200) {
-      res.status(200)
-      console.log('Token revocation successful'.blue)
-    }
+    console.log('Token revocation successful'.blue)
+    return response
   } catch (error) {
     console.log(error)
     res.status(401)

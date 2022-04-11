@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
 
 // @desc    Get top games on Twitch
-// @route   GET /api/topGames
+// @route   GET /api/games
 // @access  Private
 const getTopGames = asyncHandler(async (req, res) => {
   try {
@@ -12,21 +12,62 @@ const getTopGames = asyncHandler(async (req, res) => {
       'Client-Id': process.env.CLIENT_ID,
       Authorization: `Bearer ${accessToken}`,
     }
-    const response = await axios.get(process.env.GET_GAMES, {
+    const response = await axios.get(process.env.GET_TOPGAMES, {
       headers: options,
     })
-    if (response.status == 200) {
-      console.log(`Top games on Twitch right now!`.blue)
-      console.log(response.data.data)
-      res.status(200)
-      return res.json(response.data.data)
-    }
+    return res.json(response.data.data)
   } catch (error) {
     res.status(400)
     throw new Error('Failed to load top games')
   }
 })
 
+// @desc    Get specific game on Twitch by name
+// @route   GET /api/games/name
+// @access  Private
+const getGameByName = asyncHandler(async (req, res) => {
+  try {
+    const accessToken = await fetchToken().then((result) => result.access_token)
+    // const parseName = await findByLogin(req, res).then((result) => result)
+    const options = {
+      headers: {
+        'Client-Id': process.env.CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { name: req.body.text },
+    }
+    const response = await axios.get(process.env.GET_GAMES, options)
+    return res.json(response.data.data)
+  } catch (error) {
+    console.log(error)
+    res.status(400)
+    throw new Error('Failed to load game by name')
+  }
+})
+
+// @desc    Get specific game on Twitch by id
+// @route   GET /api/games/id
+// @access  Private
+const getGameById = asyncHandler(async (req, res) => {
+  try {
+    const accessToken = await fetchToken().then((result) => result.access_token)
+    const options = {
+      headers: {
+        'Client-Id': process.env.CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { id: req.body.text },
+    }
+    const response = await axios.get(process.env.GET_GAMES, options)
+    return res.json(response.data.data)
+  } catch (error) {
+    res.status(400)
+    throw new Error('Failed to load game by id')
+  }
+})
+
 module.exports = {
   getTopGames,
+  getGameByName,
+  getGameById,
 }
