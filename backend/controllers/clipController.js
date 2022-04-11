@@ -9,6 +9,7 @@ const Clip = require('../models/clipModel')
 // @access  Private
 const getClips = asyncHandler(async (req, res) => {
   try {
+    if (!req.body.text) return res.json('Please add a game or user to search')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const parseName = await findByLogin(req, res).then((result) => result)
     const options = {

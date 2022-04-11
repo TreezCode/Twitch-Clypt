@@ -27,8 +27,8 @@ const getTopGames = asyncHandler(async (req, res) => {
 // @access  Private
 const getGameByName = asyncHandler(async (req, res) => {
   try {
+    if (!req.body.text) return res.json('Please add a game name')
     const accessToken = await fetchToken().then((result) => result.access_token)
-    // const parseName = await findByLogin(req, res).then((result) => result)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
@@ -50,6 +50,7 @@ const getGameByName = asyncHandler(async (req, res) => {
 // @access  Private
 const getGameById = asyncHandler(async (req, res) => {
   try {
+    if (!req.body.text) return res.json('Please add a game id')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {

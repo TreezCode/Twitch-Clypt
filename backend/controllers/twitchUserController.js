@@ -7,6 +7,7 @@ const { fetchToken } = require('../middleware/twitchMiddleware')
 // @access  Private
 const findByLogin = asyncHandler(async (req, res) => {
   try {
+    if (!req.body.text) return res.json('Please add a Twitch username')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
@@ -28,6 +29,7 @@ const findByLogin = asyncHandler(async (req, res) => {
 // @access  Private
 const findById = asyncHandler(async (req, res) => {
   try {
+    if (!req.body.text) return res.json('Please add a Twitch user id')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
