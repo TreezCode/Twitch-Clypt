@@ -26,7 +26,7 @@ const getTopStreams = asyncHandler(async (req, res) => {
 // @route   GET /api/streams
 // @access  Private
 const getStream = asyncHandler(async () => {})
-
+  
 module.exports = {
   getTopStreams,
   getStream,
