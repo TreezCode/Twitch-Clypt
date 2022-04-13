@@ -1,11 +1,12 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
+const Stream = require('../models/streamModel')
 
 // @desc    Get top streams on Twitch
 // @route   GET /api/streams
 // @access  Private
-const getTopStreams = asyncHandler(async (req, res) => {
+const fetchTopStreams = asyncHandler(async (req, res) => {
   try {
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
@@ -22,12 +23,12 @@ const getTopStreams = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get stream by name on Twitch
+// @desc    Get specific stream by name on Twitch
 // @route   GET /api/streams
 // @access  Private
-const getStream = asyncHandler(async () => {})
-  
+const fetchStream = asyncHandler(async () => {})
+
 module.exports = {
-  getTopStreams,
-  getStream,
+  fetchTopStreams,
+  fetchStream,
 }

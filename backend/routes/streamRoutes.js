@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { protect } = require('../middleware/twitchMiddleware')
-const { getTopStreams } = require('../controllers/streamController')
+const { fetchTopStreams } = require('../controllers/streamController')
 
-router.route('/').get(getTopStreams)
+router.route('/').get(fetchTopStreams)
 
 module.exports = router

@@ -1,29 +1,55 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
-const { findByLogin } = require('../controllers/twitchUserController')
+const { fetchTwitchByName } = require('../controllers/twitchController')
+const { fetchGameByName } = require('../controllers/gameController')
 const Clip = require('../models/clipModel')
 
-// @desc    Get clips from Twitch user by name
+// @desc    Get clips from Twitch by user
 // @route   GET /api/clips
 // @access  Private
-const getClips = asyncHandler(async (req, res) => {
+const fetchUserClips = asyncHandler(async (req, res) => {
   try {
-    if (!req.body.text) return res.json('Please add a game or user to search')
+    const request = req.body.text
+    if (!request) return res.json('Please add a user to search for clips')
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const parseName = await findByLogin(req, res).then((result) => result)
+    const parseUser = await fetchTwitchByName(req, res).then((result) => result)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { broadcaster_id: parseName },
+      params: { broadcaster_id: parseUser.id },
+    }
+    const response = await axios.get(process.env.GET_CLIPS, options)
+    return res.status(200).json(response.data.data)
+  } catch (error) {
+    res.status(400)
+    throw new Error('Failed to load clips by user name')
+  }
+})
+
+// @desc    Get clips from Twitch by game
+// @route   GET /api/clips/game
+// @access  Private
+const fetchGameClips = asyncHandler(async (req, res) => {
+  try {
+    const request = req.body.text
+    if (!request) return res.json('Please add a game to search for clips')
+    const accessToken = await fetchToken().then((result) => result.access_token)
+    const parseGame = await fetchGameByName(req, res).then((result) => result)
+    const options = {
+      headers: {
+        'Client-Id': process.env.CLIENT_ID,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { game_id: parseGame },
     }
     const response = await axios.get(process.env.GET_CLIPS, options)
     return res.json(response.data.data)
   } catch (error) {
     res.status(400)
-    throw new Error('Failed to load clips')
+    throw new Error('Failed to load clips by game name')
   }
 })
 
@@ -53,7 +79,8 @@ const deleteClip = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-  getClips,
+  fetchUserClips,
+  fetchGameClips,
   saveClip,
   updateClip,
   deleteClip,

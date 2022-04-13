@@ -2,13 +2,13 @@ const express = require('express')
 const router = express.Router()
 const { protect } = require('../middleware/twitchMiddleware')
 const {
-  getTopGames,
-  getGameByName,
-  getGameById,
+  fetchTopGames,
+  fetchGameByName,
+  fetchGameById,
 } = require('../controllers/gameController')
 
-router.route('/').get(getTopGames)
-router.route('/id').get(getGameById)
-router.route('/name').get(getGameByName)
+router.route('/').get(fetchTopGames)
+router.route('/id').get(fetchGameById)
+router.route('/name').get(fetchGameByName)
 
 module.exports = router

@@ -1,11 +1,12 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
+const Game = require('../models/gameModel')
 
 // @desc    Get top games on Twitch
 // @route   GET /api/games
 // @access  Private
-const getTopGames = asyncHandler(async (req, res) => {
+const fetchTopGames = asyncHandler(async (req, res) => {
   try {
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
@@ -22,42 +23,43 @@ const getTopGames = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get specific game on Twitch by name
-// @route   GET /api/games/name
+// @desc    Get specific game on Twitch by name & return id
+// @route   GET /api/games/:name
 // @access  Private
-const getGameByName = asyncHandler(async (req, res) => {
+const fetchGameByName = asyncHandler(async (req, res) => {
   try {
-    if (!req.body.text) return res.json('Please add a game name')
+    const request = req.body.text
+    if (!request) return res.json('Please add a game name')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { name: req.body.text },
+      params: { name: request },
     }
     const response = await axios.get(process.env.GET_GAMES, options)
-    return res.json(response.data.data)
+    return response.data.data[0].id
   } catch (error) {
-    console.log(error)
     res.status(400)
     throw new Error('Failed to load game by name')
   }
 })
 
-// @desc    Get specific game on Twitch by id
-// @route   GET /api/games/id
+// @desc    Get specific game on Twitch by id & return name
+// @route   GET /api/games/:id
 // @access  Private
-const getGameById = asyncHandler(async (req, res) => {
+const fetchGameById = asyncHandler(async (req, res) => {
   try {
-    if (!req.body.text) return res.json('Please add a game id')
+    const request = req.body.text
+    if (!request) return res.json('Please add a game id')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { id: req.body.text },
+      params: { id: request },
     }
     const response = await axios.get(process.env.GET_GAMES, options)
     return res.json(response.data.data)
@@ -68,7 +70,7 @@ const getGameById = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-  getTopGames,
-  getGameByName,
-  getGameById,
+  fetchTopGames,
+  fetchGameByName,
+  fetchGameById,
 }
