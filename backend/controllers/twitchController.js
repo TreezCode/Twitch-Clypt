@@ -9,7 +9,10 @@ const Twitch = require('../models/twitchModel')
 const fetchTwitchByName = asyncHandler(async (req, res) => {
   try {
     const request = req.body.text
-    if (!request) return res.json('Please add a Twitch username')
+    if (!request) {
+      res.status(400) 
+      throw new Error('Please add a Twitch username')
+    }
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
@@ -26,13 +29,16 @@ const fetchTwitchByName = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get Twitch user by id and return name
+// @desc    Get Twitch user by id and return data
 // @route   GET /api/twitch/id
 // @access  Private
 const fetchTwitchById = asyncHandler(async (req, res) => {
   try {
     const request = req.body.text
-    if (!request) return res.json('Please add a Twitch user id')
+    if (!request) {
+      res.status(400) 
+      throw new Error('Please add a Twitch user id')
+    }
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
@@ -42,20 +48,19 @@ const fetchTwitchById = asyncHandler(async (req, res) => {
       params: { id: request },
     }
     const response = await axios.get(process.env.GET_USERS, options)
-    return res.json(response.data.data[0].login)
+    return res.json(response.data.data[0])
   } catch (error) {
     res.status(400)
     throw new Error('Failed to load Twitch user by id')
   }
 })
 
-// @desc    Get Twitch user by id and return name
-// @route   POST /api/twitch
+// @desc    Save Twitch user
+// @route   POST /api/twitch/:name
 // @access  Private
 const saveTwitch = asyncHandler(async (req, res) => {
   try {
     const request = await fetchTwitchByName(req, res).then((result) => result)
-    console.log(request)
     if (!request.id) {
       res.status(400)
       throw new Error("There's no Twitch user here...")
@@ -77,7 +82,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
   } catch (error) {
     throw error.name === 'MongoServerError' && error.code == 11000
       ? new Error(`Twitch user already saved`)
-      : new Error(`Error occured while saving Twitch user. Code: ${error.code}'`)
+      : new Error(`Error occured while saving Twitch user. Code: ${error.code}`)
   }
 })
 

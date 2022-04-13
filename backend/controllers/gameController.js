@@ -29,7 +29,10 @@ const fetchTopGames = asyncHandler(async (req, res) => {
 const fetchGameByName = asyncHandler(async (req, res) => {
   try {
     const request = req.body.text
-    if (!request) return res.json('Please add a game name')
+    if (!request) {
+      res.status(400)
+      throw new Error('Please add a game name')
+    }
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
@@ -52,7 +55,10 @@ const fetchGameByName = asyncHandler(async (req, res) => {
 const fetchGameById = asyncHandler(async (req, res) => {
   try {
     const request = req.body.text
-    if (!request) return res.json('Please add a game id')
+    if (!request) {
+      res.status(400)
+      throw new Error('Please add a game id')
+    }
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
