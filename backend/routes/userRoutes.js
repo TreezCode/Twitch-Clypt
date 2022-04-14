@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
+const { protect } = require('../middleware/jwtMiddleware')
 const {
   registerUser,
   loginUser,
   getMe,
 } = require('../controllers/userController')
-const { protect } = require('../middleware/jwtMiddleware')
 
 router.post('/', registerUser)
 router.post('/login', loginUser)

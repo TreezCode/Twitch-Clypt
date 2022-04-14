@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -15,6 +15,30 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a password'],
     },
+    twitches: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Twitch',
+      },
+    ],
+    clips: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Clip',
+      },
+    ],
+    games: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Game',
+      },
+    ],
+    streams: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Stream',
+      },
+    ],
   },
   {
     timestamps: true,

@@ -2,41 +2,37 @@ const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
 const { fetchToken } = require('../middleware/twitchMiddleware')
 const Twitch = require('../models/twitchModel')
+const User = require('../models/userModel')
 
-// @desc    Get Twitch user by name and return id
-// @route   GET /api/twitch
-// @access  Private
+// @desc    Helper function fetches Twitch data by name
 const fetchTwitchByName = asyncHandler(async (req, res) => {
   try {
-    const request = req.body.text
-    if (!request) {
-      res.status(400) 
-      throw new Error('Please add a Twitch username')
-    }
     const accessToken = await fetchToken().then((result) => result.access_token)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { login: request },
+      params: { login: req },
     }
     const response = await axios.get(process.env.GET_USERS, options)
+    if (!response.data.data[0]) {
+      res.status(400)
+      throw new Error('Unable to find that Twitch profile')
+    }
     return response.data.data[0]
   } catch (error) {
     res.status(400)
-    throw new Error('Failed to load Twitch user by name')
+    throw new Error('Failed to load Twitch profile')
   }
 })
 
-// @desc    Get Twitch user by id and return data
-// @route   GET /api/twitch/id
-// @access  Private
+// @desc    Helper function fetches Twitch data by id
 const fetchTwitchById = asyncHandler(async (req, res) => {
   try {
     const request = req.body.text
     if (!request) {
-      res.status(400) 
+      res.status(400)
       throw new Error('Please add a Twitch user id')
     }
     const accessToken = await fetchToken().then((result) => result.access_token)
@@ -55,34 +51,97 @@ const fetchTwitchById = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Save Twitch user
-// @route   POST /api/twitch/:name
+// @desc    Get Twitch profile by name and store data in db
+// @route   GET /api/twitch
+// @access  Private
+const getTwitch = asyncHandler(async (req, res) => {
+  try {
+    const { login } = req.body
+    const response = await fetchTwitchByName(login, res).then(
+      (result) => result
+    )
+    const twitchExists = await Twitch.findOne({ id: response.id })
+    if (!twitchExists) {
+      const twitch = await Twitch.insertMany({
+        id: response.id,
+        login: response.login,
+        display_name: response.display_name,
+        type: response.type,
+        broadcaster_type: response.broadcaster_type,
+        description: response.description,
+        profile_image_url: response.profile_image_url,
+        offline_image_url: response.offline_image_url,
+        view_count: response.view_count,
+        created_at: response.created_at,
+        email: response.email,
+      })
+      console.log('Twitch profile added to database'.yellow)
+      return res.status(200).json(twitch)
+    }
+    const updatedTwitch = await Twitch.findByIdAndUpdate(
+      twitchExists._id,
+      { views: ++twitchExists.views },
+      { new: true }
+    )
+    return res.status(200).json(updatedTwitch)
+  } catch (error) {
+    throw new Error('Failed to get Twitch profile')
+  }
+})
+
+// @desc    Save Twitch profile to user
+// @route   PUT /api/twitch/:id
 // @access  Private
 const saveTwitch = asyncHandler(async (req, res) => {
+  const userId = req.params.id
+  const { login } = req.body
   try {
-    const request = await fetchTwitchByName(req, res).then((result) => result)
-    if (!request.id) {
-      res.status(400)
-      throw new Error("There's no Twitch user here...")
+    const response = await fetchTwitchByName(login, res).then(
+      (result) => result
+    )
+    // Check for twitch in db
+    const twitchExists = await Twitch.findOne({ id: response.id })
+    // If already in db update user data
+    if (twitchExists) {
+      const user = await User.findByIdAndUpdate(userId, {
+        $addToSet: { twitches: twitchExists._id },
+      })
+      console.log(`Saved a Twitch profile`.yellow)
+      return res.status(200).json(user)
     }
-    const twitch = await Twitch.create({
-      id: request.id,
-      login: request.login,
-      display_name: request.display_name,
-      type: request.type,
-      broadcaster_type: request.broadcaster_type,
-      description: request.description,
-      profile_image_url: request.profile_image_url,
-      offline_image_url: request.offline_image_url,
-      view_count: request.view_count,
-      created_at: request.created_at,
-      email: request.email,
-    })
-    res.status(200).json(twitch)
+    // If not in db add twitch data then update user data
+    if (!twitchExists) {
+      const twitch = await Twitch.insertMany({
+        id: response.id,
+        login: response.login,
+        display_name: response.display_name,
+        type: response.type,
+        broadcaster_type: response.broadcaster_type,
+        description: response.description,
+        profile_image_url: response.profile_image_url,
+        offline_image_url: response.offline_image_url,
+        view_count: response.view_count,
+        created_at: response.created_at,
+        email: response.email,
+      })
+      const user = await User.findByIdAndUpdate(userId, {
+        $addToSet: { twitches: twitch._id },
+      })
+      if (!req.user) {
+        res.status(400)
+        throw new Error('Must be a user to save Twitch profiles')
+      }
+      if (req.user._id ==! twitchExists._id.toString()) {
+        res.status(401)
+        throw new Error('User not authorized')
+      }
+      console.log('Twitch profile added'.yellow)
+      return res.status(200).json(user)
+    }
   } catch (error) {
     throw error.name === 'MongoServerError' && error.code == 11000
-      ? new Error(`Twitch user already saved`)
-      : new Error(`Error occured while saving Twitch user. Code: ${error.code}`)
+      ? new Error(`Twitch profile already saved`)
+      : new Error(error)
   }
 })
 
@@ -90,4 +149,5 @@ module.exports = {
   fetchTwitchByName,
   fetchTwitchById,
   saveTwitch,
+  getTwitch,
 }

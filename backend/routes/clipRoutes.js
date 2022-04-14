@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { protect } = require('../middleware/jwtMiddleware')
 const {
   fetchUserClips,
   fetchGameClips,
@@ -7,6 +8,7 @@ const {
   updateClip,
   deleteClip,
 } = require('../controllers/clipController')
+
 
 router.route('/game').get(fetchGameClips)
 router.route('/').get(fetchUserClips).post(saveClip)

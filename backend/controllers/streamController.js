@@ -23,12 +23,6 @@ const fetchTopStreams = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Get specific stream by name on Twitch
-// @route   GET /api/streams
-// @access  Private
-const fetchStream = asyncHandler(async () => {})
-
 module.exports = {
   fetchTopStreams,
-  fetchStream,
 }

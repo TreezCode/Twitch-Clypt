@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { protect } = require('../middleware/twitchMiddleware')
+const { protect } = require('../middleware/jwtMiddleware')
 const {
   fetchTopGames,
   fetchGameByName,

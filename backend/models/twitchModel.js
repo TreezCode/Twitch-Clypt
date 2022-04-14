@@ -2,15 +2,16 @@ const mongoose = require('mongoose')
 
 const twitchSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: false,
-      ref: 'User',
-    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     id: {
       type: String,
+      unique: true,
       required: true,
-      unique: [true]
     },
     login: {
       type: String,
@@ -44,6 +45,14 @@ const twitchSchema = mongoose.Schema(
     email: {
       type: String,
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
+    clips: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Clip',
+    }]
   },
   {
     timestamps: true,

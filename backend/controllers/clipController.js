@@ -10,10 +10,10 @@ const Clip = require('../models/clipModel')
 // @access  Private
 const fetchUserClips = asyncHandler(async (req, res) => {
   try {
-    const request = req.body.text
-    if (!request) return res.json('Please add a user to search for clips')
+    const { login } = req.body
+    if (!login) return res.json('Please add a user to search for clips')
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const parseUser = await fetchTwitchByName(req, res).then((result) => result)
+    const parseUser = await fetchTwitchByName(login, res).then((result) => result)
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
