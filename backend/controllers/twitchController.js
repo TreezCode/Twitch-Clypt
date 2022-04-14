@@ -99,9 +99,9 @@ const saveTwitch = asyncHandler(async (req, res) => {
     const response = await fetchTwitchByName(login, res).then(
       (result) => result
     )
-    // Check for twitch in db
+    // Check for Twitch in db
     const twitchExists = await Twitch.findOne({ id: response.id })
-    // If already in db update user data
+    // If exists update user data
     if (twitchExists) {
       const user = await User.findByIdAndUpdate(userId, {
         $addToSet: { twitches: twitchExists._id },
@@ -109,7 +109,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
       console.log(`Saved a Twitch profile`.yellow)
       return res.status(200).json(user)
     }
-    // If not in db add twitch data then update user data
+    // If doesnt exist add Twitch data then update user data
     if (!twitchExists) {
       const twitch = await Twitch.insertMany({
         id: response.id,
@@ -124,9 +124,11 @@ const saveTwitch = asyncHandler(async (req, res) => {
         created_at: response.created_at,
         email: response.email,
       })
+      console.log('Added a Twitch profile to db'.yellow)
       const user = await User.findByIdAndUpdate(userId, {
         $addToSet: { twitches: twitch._id },
       })
+      console.log('Saved a Twitch profile'.yellow)
       if (!req.user) {
         res.status(400)
         throw new Error('Must be a user to save Twitch profiles')
@@ -135,7 +137,6 @@ const saveTwitch = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error('User not authorized')
       }
-      console.log('Twitch profile added'.yellow)
       return res.status(200).json(user)
     }
   } catch (error) {
