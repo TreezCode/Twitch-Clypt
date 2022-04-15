@@ -55,12 +55,12 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
 // @route   GET /api/twitch
 // @access  Private
 const getTwitch = asyncHandler(async (req, res) => {
-  const { login } = req.body
-  if (!login) {
+  const { name } = req.body
+  if (!name) {
     res.status(400)
-    throw new Error('Please add a Twitch profile to the text field')
+    throw new Error('Please add a Twitch name to the text field')
   }
-  const response = await fetchTwitchByName(login, res).then(
+  const response = await fetchTwitchByName(name, res).then(
     (result) => result
   )
   try {
@@ -76,14 +76,14 @@ const getTwitch = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Save Twitch profile to user
+// @desc    Save Twitch profile reference to user
 // @route   PUT /api/twitch/:id
 // @access  Private
 const saveTwitch = asyncHandler(async (req, res) => {
-  const { login } = req.body
-  if (!login) {
+  const { name } = req.body
+  if (!name) {
     res.status(400)
-    throw new Error('Please add a Twitch profile to save')
+    throw new Error('Please add a Twitch name to save')
   }
   const loggedIn = req.user
   if (!loggedIn) {
@@ -91,7 +91,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
     throw new Error('Must be logged in to save Twitch profiles')
   }
   const userId = req.params.id
-  const response = await fetchTwitchByName(login, res).then((result) => result)
+  const response = await fetchTwitchByName(name, res).then((result) => result)
   // Find Twitch in db
   const twitch = await Twitch.findOne({ id: response.id })
   const user = await User.findById(userId)

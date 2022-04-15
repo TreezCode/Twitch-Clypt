@@ -9,11 +9,11 @@ const Clip = require('../models/clipModel')
 // @route   GET /api/clips
 // @access  Private
 const fetchUserClips = asyncHandler(async (req, res) => {
-  const { login } = req.body
-  if (!login) throw new Error('Add a Twitch profile to search for clips')
+  const { name } = req.body
+  if (!name) throw new Error('Add a Twitch name to search for clips')
   try {
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const params = await fetchTwitchByName(login, res).then(
+    const params = await fetchTwitchByName(name, res).then(
       (result) => result
     )
     const options = {
