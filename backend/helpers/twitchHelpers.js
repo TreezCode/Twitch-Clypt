@@ -73,6 +73,7 @@ const revokeToken = asyncHandler(async (req, res) => {
 // @resource https://dev.twitch.tv/docs/api/reference#get-users
 const fetchTwitchByName = asyncHandler(async (name, res) => {
   // configure http request
+  name = name.replace(/\s+/g, '').toLowerCase().trim()
   const accessToken = await fetchToken().then((result) => result.access_token)
   const options = {
     headers: {
@@ -114,7 +115,26 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
     }
     return twitchExists
   } catch (error) {
+    res.status(400)
     throw new Error(error)
+  }
+})
+
+// @desc Helper function checks for user login and authentication validations
+const validateUser = asyncHandler(async (loggedIn, user, res) => {
+  // validate user
+  if (!loggedIn) {
+    res.status(400)
+    throw new Error('User not logged in')
+  }
+  if (!user) {
+    res.status(400)
+    throw new Error('User not found in database')
+  }
+  // authenticate user
+  if (loggedIn._id.toString() !== user._id.toString()) {
+    res.status(401)
+    throw new Error('User not authorized')
   }
 })
 
@@ -123,4 +143,5 @@ module.exports = {
   authApp,
   revokeToken,
   fetchTwitchByName,
+  validateUser,
 }
