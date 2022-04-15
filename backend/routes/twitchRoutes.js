@@ -5,6 +5,5 @@ const { saveTwitch, getTwitch, deleteTwitch } = require('../controllers/twitchCo
 
 router.route('/').get(getTwitch)
 router.route('/:id').put(protect, saveTwitch).delete(protect, deleteTwitch)
-router.route('/twitches/:id').put(protect, deleteTwitch)
 
 module.exports = router
