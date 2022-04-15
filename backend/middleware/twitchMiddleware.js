@@ -12,7 +12,8 @@ const fetchToken = asyncHandler(async (req, res) => {
       grant_type: 'client_credentials',
     }
     const response = await axios.post(process.env.GET_TOKEN, options)
-    return response.data
+    const token = response.data
+    return token
   } catch (error) {
     res.status(401)
     throw new Error('Failed to fetch token')

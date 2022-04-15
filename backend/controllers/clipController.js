@@ -9,23 +9,27 @@ const Clip = require('../models/clipModel')
 // @route   GET /api/clips
 // @access  Private
 const fetchUserClips = asyncHandler(async (req, res) => {
+  const { login } = req.body
+  if (!login) throw new Error('Add a Twitch profile to search for clips')
   try {
-    const { login } = req.body
-    if (!login) return res.json('Please add a user to search for clips')
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const parseUser = await fetchTwitchByName(login, res).then((result) => result)
+    const params = await fetchTwitchByName(login, res).then(
+      (result) => result
+    )
     const options = {
       headers: {
         'Client-Id': process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
       },
-      params: { broadcaster_id: parseUser.id },
+      params: { broadcaster_id: params.id },
     }
     const response = await axios.get(process.env.GET_CLIPS, options)
+    if (!response.data.data[0])
+      throw new Error('Unable to find that Twitch profile')
     return res.status(200).json(response.data.data)
   } catch (error) {
     res.status(400)
-    throw new Error('Failed to load clips by user name')
+    throw new Error(error.message)
   }
 })
 
