@@ -1,7 +1,6 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken } = require('../middleware/twitchMiddleware')
-const { fetchTwitchByName } = require('../controllers/twitchController')
+const { fetchTwitchByName, fetchToken } = require('../helpers/twitchHelpers')
 const { fetchGameByName } = require('../controllers/gameController')
 const Clip = require('../models/clipModel')
 

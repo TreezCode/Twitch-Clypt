@@ -1,6 +1,6 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken } = require('../middleware/twitchMiddleware')
+const { fetchToken } = require('../helpers/twitchHelpers')
 const Game = require('../models/gameModel')
 
 // @desc    Get top games on Twitch

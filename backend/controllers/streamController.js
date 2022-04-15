@@ -1,6 +1,6 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken } = require('../middleware/twitchMiddleware')
+const { fetchToken } = require('../helpers/twitchHelpers')
 const Stream = require('../models/streamModel')
 
 // @desc    Get top streams on Twitch

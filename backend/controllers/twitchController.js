@@ -1,69 +1,21 @@
-const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken } = require('../middleware/twitchMiddleware')
 const Twitch = require('../models/twitchModel')
 const User = require('../models/userModel')
-
-// @desc    Helper function fetches Twitch profile by name and adds data to db
-const fetchTwitchByName = asyncHandler(async (name, res) => {
-  const accessToken = await fetchToken().then((result) => result.access_token)
-  const options = {
-    headers: {
-      'Client-Id': process.env.CLIENT_ID,
-      Authorization: `Bearer ${accessToken}`,
-    },
-    params: { login: name },
-  }
-  // Request data from Twitch API
-  const response = await axios.get(process.env.GET_USERS, options)
-  const profile = response.data.data[0]
-  if (!profile) {
-    res.status(400)
-    throw new Error('Unable to find that Twitch profile')
-  }
-  try {
-    // Check for Twitch profile in db
-    const twitchExists = await Twitch.findOne({ id: profile.id })
-    // If profile doesnt exist add it
-    if (!twitchExists) {
-      const twitch = await Twitch.insertMany({
-        id: profile.id,
-        login: profile.login,
-        display_name: profile.display_name,
-        type: profile.type,
-        broadcaster_type: profile.broadcaster_type,
-        description: profile.description,
-        profile_image_url: profile.profile_image_url,
-        offline_image_url: profile.offline_image_url,
-        view_count: profile.view_count,
-        created_at: profile.created_at,
-        email: profile.email,
-      })
-      console.log(
-        `Successfully added ${twitch[0].display_name}'s Twitch profile to the database`
-          .yellow
-      )
-      return twitch[0]
-    }
-    return twitchExists
-  } catch (error) {
-    throw new Error(error)
-  }
-})
+const { fetchTwitchByName } = require('../helpers/twitchHelpers')
 
 // @desc    Get Twitch profile by name and update views
 // @route   GET /api/twitch
 // @access  Private
 const getTwitch = asyncHandler(async (req, res) => {
+  // validate input
   const { name } = req.body
   if (!name) {
     res.status(400)
     throw new Error('Please add a Twitch name to the text field')
   }
-  const response = await fetchTwitchByName(name, res).then(
-    (result) => result
-  )
+  const response = await fetchTwitchByName(name, res).then((result) => result)
   try {
+    // increment views in database
     const twitch = await Twitch.findOne({ id: response.id })
     const updatedTwitch = await Twitch.findByIdAndUpdate(
       twitch._id,
@@ -80,38 +32,67 @@ const getTwitch = asyncHandler(async (req, res) => {
 // @route   PUT /api/twitch/:id
 // @access  Private
 const saveTwitch = asyncHandler(async (req, res) => {
-  const { name } = req.body
-  if (!name) {
-    res.status(400)
-    throw new Error('Please add a Twitch name to save')
-  }
+  // validate user
   const loggedIn = req.user
-  if (!loggedIn) {
+  const user = await User.findById(loggedIn._id)
+  if (!loggedIn || !user) {
     res.status(400)
     throw new Error('Must be logged in to save Twitch profiles')
   }
-  const userId = req.params.id
-  const response = await fetchTwitchByName(name, res).then((result) => result)
-  // Find Twitch in db
-  const twitch = await Twitch.findOne({ id: response.id })
-  const user = await User.findById(userId)
-  // Validate user
+  // authenticate user
   if (loggedIn._id.toString() !== user._id.toString()) {
     res.status(401)
     throw new Error('User not authorized')
   }
-  // Add Twitch object id reference to user in db
-  const updatedUser = await User.findByIdAndUpdate(userId, {
-    $addToSet: { twitches: twitch._id },
-  })
-  console.log(
-    `${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow
-  )
-  return res.status(200).json({ user: updatedUser, twitch: twitch })
+  try {
+    // add twitch reference to user in database
+    const twitchId = req.params.id
+    const twitch = await Twitch.findOne({ _id: twitchId })
+    const updatedUser = await User.findByIdAndUpdate(
+      loggedIn._id,
+      { $addToSet: { twitches: twitch._id.toString() } },
+      { new: true }
+    )
+    console.log(`${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow)
+    return res.status(200).json({ user: updatedUser, twitch: twitch })
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+// @desc    Save Twitch profile reference to user
+// @route   DELETE /api/twitch/:id
+// @access  Private
+const deleteTwitch = asyncHandler(async (req, res) => {
+  // validate user
+  const loggedIn = req.user
+  const user = await User.findById(loggedIn._id)
+  if (!loggedIn || !user) {
+    res.status(400)
+    throw new Error('Must be logged in to delete Twitch profiles')
+  }
+  // authenticate user
+  if (loggedIn._id.toString() !== user._id.toString()) {
+    res.status(401)
+    throw new Error('User not authorized')
+  }
+  try {
+    // remove twitch reference from user in db
+    const twitchId = req.params.id
+    const updatedUser = await User.findByIdAndUpdate(
+      loggedIn._id,
+      { $pull: { twitches: twitchId.toString() } },
+      { new: true }
+    )
+    console.log(`${loggedIn.name} deleted ${twitchId}'s Twitch profile`.yellow)
+    return res.status(200).json({ user: updatedUser })
+  } catch (error) {
+    throw new Error(error)
+  }
 })
 
 module.exports = {
-  fetchTwitchByName,
   saveTwitch,
   getTwitch,
+  deleteTwitch,
 }

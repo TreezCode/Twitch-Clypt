@@ -66,6 +66,10 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
+  if(!req.user) {
+    res.status(400)
+    throw new Error('User not found')
+  }
   res.status(200).json(req.user)
 })
 
