@@ -122,11 +122,6 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
 
 // @desc Helper function checks for user login and authentication validations
 const validateUser = asyncHandler(async (loggedIn, user, res) => {
-  // validate user
-  if (!loggedIn) {
-    res.status(400)
-    throw new Error('User not logged in')
-  }
   if (!user) {
     res.status(400)
     throw new Error('User not found in database')

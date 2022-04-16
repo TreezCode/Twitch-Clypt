@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema(
     },
     twitches: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Twitch',
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Twitch' },
+        name: { type: String, required: true },
       },
     ],
     clips: [
