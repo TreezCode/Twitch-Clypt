@@ -23,20 +23,14 @@ const userSchema = new mongoose.Schema(
     ],
     clips: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Clip',
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Clip' },
+        name: { type: String, required: true },
       },
     ],
     games: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Game',
-      },
-    ],
-    streams: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Stream',
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
+        name: { type: String, required: true },
       },
     ],
   },

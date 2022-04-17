@@ -82,7 +82,7 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
     },
     params: { login: name },
   }
-  // request data from Twitch API
+  // request profile data from Twitch API
   const response = await axios.get(process.env.GET_USERS, options)
   const profile = response.data.data[0]
   if (!profile) {
@@ -91,26 +91,11 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
   }
   try {
     // check for Twitch profile in db
-    const twitchExists = await Twitch.findOne({ id: profile.id })
+    const twitchExists = await Twitch.findOne({ id : profile.id })
     // if profile doesnt exist add it
     if (!twitchExists) {
-      const twitch = await Twitch.insertMany({
-        id: profile.id,
-        login: profile.login,
-        display_name: profile.display_name,
-        type: profile.type,
-        broadcaster_type: profile.broadcaster_type,
-        description: profile.description,
-        profile_image_url: profile.profile_image_url,
-        offline_image_url: profile.offline_image_url,
-        view_count: profile.view_count,
-        created_at: profile.created_at,
-        email: profile.email,
-      })
-      console.log(
-        `Successfully added ${twitch[0].display_name}'s Twitch profile to the database`
-          .yellow
-      )
+      const twitch = await Twitch.insertMany(profile)
+      console.log(`Successfully added ${twitch[0].display_name}'s Twitch profile to the database`.yellow)
       return twitch[0]
     }
     return twitchExists

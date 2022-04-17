@@ -47,12 +47,14 @@ const twitchSchema = mongoose.Schema(
     },
     views: {
       type: Number,
-      default: 0,
+      default: 1,
     },
-    clips: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Clip',
-    }]
+    clips: [
+      {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Clip' },
+        name: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

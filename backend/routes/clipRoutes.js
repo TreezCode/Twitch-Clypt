@@ -2,16 +2,17 @@ const express = require('express')
 const router = express.Router()
 const { protect } = require('../middleware/jwtMiddleware')
 const {
-  fetchUserClips,
-  fetchGameClips,
+  getTwitchClips,
+  getGameClips,
+  getSavedClips,
   saveClip,
-  updateClip,
-  deleteClip,
+  unsaveClip,
 } = require('../controllers/clipController')
 
-
-router.route('/game').get(fetchGameClips)
-router.route('/').get(fetchUserClips).post(saveClip)
-router.route('/').delete(deleteClip).put(updateClip)
+router.route('/').post(getTwitchClips)
+router.route('/:id').put(protect, saveClip)
+router.route('/game').post(getGameClips)
+router.route('/saved').put(protect, getSavedClips)
+router.route('/saved/:id').put(protect, unsaveClip)
 
 module.exports = router

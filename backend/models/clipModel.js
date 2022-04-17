@@ -4,11 +4,11 @@ const clipSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
     },
     id: {
       type: String,
+      unique: true,
       required: true,
     },
     url: {
@@ -35,31 +35,33 @@ const clipSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    game_id: {
-      type: String,
-      required: true,
-    },
     video_id: {
       type: String,
-      required: true,
+    },
+    game_id: {
+      type: String,
+    },
+    language: {
+      type: String,
     },
     title: {
       type: String,
     },
     view_count: {
       type: Number,
-      required: true,
     },
     created_at: {
       type: String,
-      required: true,
     },
     thumbnail_url: {
       type: String,
     },
     duration: {
       type: Number,
-      required: true,
+    },
+    views: {
+      type: Number,
+      default: 1,
     },
   },
   {

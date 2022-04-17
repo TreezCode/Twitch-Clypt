@@ -28,7 +28,7 @@ const fetchTopGames = asyncHandler(async (req, res) => {
 // @access  Private
 const fetchGameByName = asyncHandler(async (req, res) => {
   try {
-    const request = req.body.text
+    const request = req.body.name
     if (!request) {
       res.status(400)
       throw new Error('Please add a game name')

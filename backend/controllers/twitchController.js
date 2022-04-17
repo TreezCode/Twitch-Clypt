@@ -34,7 +34,7 @@ const getTwitch = asyncHandler(async (req, res) => {
 const saveTwitch = asyncHandler(async (req, res) => {
   const loggedIn = req.user
   if (!loggedIn) {
-    res.status(400)
+    res.status(401)
     throw new Error('User not logged in')
   }
   const user = await User.findById(loggedIn._id)
@@ -63,12 +63,12 @@ const saveTwitch = asyncHandler(async (req, res) => {
 })
 
 // @desc    Delete Twitch profile from logged in user
-// @route   DELETE /api/twitch/:id
+// @route   PUT /api/twitch/saved/:id
 // @access  Private
-const deleteTwitch = asyncHandler(async (req, res) => {
+const unsaveTwitch = asyncHandler(async (req, res) => {
   const loggedIn = req.user
   if (!loggedIn) {
-    res.status(400)
+    res.status(401)
     throw new Error('User not logged in')
   }
   const user = await User.findById(loggedIn._id)
@@ -119,6 +119,6 @@ const getSavedTwitch = asyncHandler(async (req, res) => {
 module.exports = {
   getTwitch,
   saveTwitch,
+  unsaveTwitch,
   getSavedTwitch,
-  deleteTwitch,
 }
