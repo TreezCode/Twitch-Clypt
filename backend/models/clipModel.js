@@ -69,4 +69,6 @@ const clipSchema = mongoose.Schema(
   }
 )
 
+// clipSchema.index({'id' : 1}, { unique:  true})
+
 module.exports = mongoose.model('Clip', clipSchema)

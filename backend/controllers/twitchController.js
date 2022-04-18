@@ -46,6 +46,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error(`Twitch profile has already been saved`)
     }
+    console.log(twitchId);
     const twitch = await Twitch.findOne({ _id: twitchId })
     if (!twitch) throw new Error('Unable to find Twitch profile in database')
     // add twitch reference to user
@@ -100,15 +101,18 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
 // @access  Private
 const getSavedTwitch = asyncHandler(async (req, res) => {
   const loggedIn = req.user
+  console.log(loggedIn);
   if (!loggedIn) {
     res.status(400)
     throw new Error('User not logged in')
   }
+  // find user and authorize
   const user = await User.findById(loggedIn._id)
   validateUser(loggedIn, user, res)
   try {
     const profileIds = user.twitches
-    const profiles = await Twitch.find({ _id: { $in: profileIds } })
+    console.log(profileIds);
+    const profiles = await Twitch.find({ _id : { $in : profileIds } })
     res.status(200).json({ profiles: profiles })
   } catch (error) {
     res.status(400)

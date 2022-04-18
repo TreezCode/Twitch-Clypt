@@ -23,24 +23,34 @@ const getTwitchClips = asyncHandler(async (req, res) => {
     },
     params: { broadcaster_id: params.id },
   }
-  // request clip data from Twitch API
+  // request data from Twitch API
   const response = await axios.get(process.env.GET_CLIPS, options)
   const clipData = response.data.data
   if (!clipData[0]) {
     res.status(400)
     throw new Error('No clips found for that Twitch profile')
   }
-  try {
-    // check for Twitch clip data in db
-    const clipExists = await Clip.findOne({ id: clipData[0].id })
-    if (clipExists) return res.status(200).json(clipData)
-    // if clip data doesnt exist add it
+  // check for existing clip data in database
+  const clipExists = await Clip.find({broadcaster_id: clipData[0].broadcaster_id,})
+  // if previous clip data does NOT exist then add it
+  if (!clipExists[0]) {
     const clips = await Clip.insertMany(clipData)
-    console.log(`Successfully added ${clips[0].broadcaster_name}'s Twitch clips to the database`.yellow);
-    return res.status(200).json(clips)
+    console.log(`Successfully added ${clips[0].broadcaster_name}'s Twitch clips to the database`.yellow)
+    return res.status(201).json({ clips: clips })
+  }
+  // if previous clip data DOES exist then update with new set
+  try {
+    await Clip.insertMany(clipData, { ordered: false })
   } catch (error) {
-    res.status(400)
-    throw new Error(error)
+    if (!error.message.includes('E11000')) {
+      throw new Error(error)
+    }
+    const numInserted = error.result.result.nInserted
+    // console.log(error.result)
+    console.log(`Successfully updated ${numInserted} of ${clipData[0].broadcaster_name}'s Twitch clips in the database`.yellow
+    )
+  } finally {
+    return res.status(201).json(clipData)
   }
 })
 
@@ -49,7 +59,7 @@ const getTwitchClips = asyncHandler(async (req, res) => {
 // @access  Private
 const getGameClips = asyncHandler(async (req, res) => {
   try {
-    console.log(req.body);
+    console.log(req.body)
     const request = req.body.name
     if (!request) return res.json('Please add a game to search for clips')
     const accessToken = await fetchToken().then((result) => result.access_token)
