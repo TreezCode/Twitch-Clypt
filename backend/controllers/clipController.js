@@ -30,25 +30,18 @@ const getTwitchClips = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('No clips found for that Twitch profile')
   }
-  // check for existing clip data in database
-  const clipExists = await Clip.find({broadcaster_id: clipData[0].broadcaster_id,})
-  // if previous clip data does NOT exist then add it
-  if (!clipExists[0]) {
-    const clips = await Clip.insertMany(clipData)
-    console.log(`Successfully added ${clips[0].broadcaster_name}'s Twitch clips to the database`.yellow)
-    return res.status(201).json({ clips: clips })
-  }
-  // if previous clip data DOES exist then update with new set
+  // if previous data DOES exist then update with new set 'ordered:false'
   try {
     await Clip.insertMany(clipData, { ordered: false })
+    const numAdded = clipData.length
+    console.log(`Successfully added ${numAdded} of ${clipData[0].broadcaster_name}'s Twitch clips to the database`.yellow)
   } catch (error) {
     if (!error.message.includes('E11000')) {
+      res.status(400)
       throw new Error(error)
     }
     const numInserted = error.result.result.nInserted
-    // console.log(error.result)
-    console.log(`Successfully updated ${numInserted} of ${clipData[0].broadcaster_name}'s Twitch clips in the database`.yellow
-    )
+    console.log(`Successfully updated ${numInserted} of ${clipData[0].broadcaster_name}'s Twitch clips in the database`.yellow)
   } finally {
     return res.status(201).json(clipData)
   }
@@ -58,9 +51,8 @@ const getTwitchClips = asyncHandler(async (req, res) => {
 // @route   POST /api/clips/game
 // @access  Private
 const getGameClips = asyncHandler(async (req, res) => {
+  const request = req.body.name
   try {
-    console.log(req.body)
-    const request = req.body.name
     if (!request) return res.json('Please add a game to search for clips')
     const accessToken = await fetchToken().then((result) => result.access_token)
     const parseGame = await fetchGameByName(req, res).then((result) => result)

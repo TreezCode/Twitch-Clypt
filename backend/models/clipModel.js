@@ -26,6 +26,7 @@ const clipSchema = mongoose.Schema(
     broadcaster_name: {
       type: String,
       required: true,
+      index: true
     },
     creator_id: {
       type: String,
@@ -69,6 +70,6 @@ const clipSchema = mongoose.Schema(
   }
 )
 
-// clipSchema.index({'id' : 1}, { unique:  true})
+// clipSchema.index({'broadcaster_name' : 1}, { unique:  true})
 
 module.exports = mongoose.model('Clip', clipSchema)
