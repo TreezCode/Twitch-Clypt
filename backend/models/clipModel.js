@@ -64,6 +64,11 @@ const clipSchema = mongoose.Schema(
       type: Number,
       default: 1,
     },
+    pagination: {
+      cursor: {
+        type: String,
+      }
+    },
   },
   {
     timestamps: true,
@@ -71,5 +76,4 @@ const clipSchema = mongoose.Schema(
 )
 
 // clipSchema.index({'broadcaster_name' : 1}, { unique:  true})
-
 module.exports = mongoose.model('Clip', clipSchema)

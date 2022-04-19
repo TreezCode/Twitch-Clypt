@@ -4,7 +4,6 @@ const gameSchema = mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
     },
     box_art_url: {
@@ -18,10 +17,15 @@ const gameSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    views: {
+      type: Number,
+      default: 1,
+    },
   },
   {
     timestamps: true,
   }
 )
 
+// gameSchema.index({'name' : 1}, { unique:  true})
 module.exports = mongoose.model('Game', gameSchema)

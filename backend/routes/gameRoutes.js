@@ -1,14 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { protect } = require('../middleware/jwtMiddleware')
-const {
-  fetchTopGames,
-  fetchGameByName,
-  fetchGameById,
-} = require('../controllers/gameController')
+const { getTopGames } = require('../controllers/gameController')
 
-router.route('/').get(fetchTopGames)
-router.route('/id').get(fetchGameById)
-router.route('/name').get(fetchGameByName)
+router.route('/').get(getTopGames)
 
 module.exports = router

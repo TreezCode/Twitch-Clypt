@@ -1,18 +1,20 @@
 const asyncHandler = require('express-async-handler')
 const { default: axios } = require('axios')
 const Twitch = require('../models/twitchModel')
+const Game = require('../models/gameModel')
 
 // @desc Grants app access token
 // @resource Twitch OAuth Client Credentials Grant Flow documentation:
 // @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#client-credentials-grant-flow
 const fetchToken = asyncHandler(async (req, res) => {
+  const options = {
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    grant_type: 'client_credentials',
+  }
+  const response = await axios.post(process.env.GET_TOKEN, options)
+  if (!response) throw new Error('Failed to fetch token')
   try {
-    const options = {
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-      grant_type: 'client_credentials',
-    }
-    const response = await axios.post(process.env.GET_TOKEN, options)
     const token = response.data
     return token
   } catch (error) {
@@ -21,9 +23,9 @@ const fetchToken = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc Grants user access & refresh token
-// @resource Twitch OAuth Authorization Code Grant Flow documentation:
-// @resource https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
+// @desc      Grants user access & refresh token
+// @resource  Twitch OAuth Authorization Code Grant Flow documentation:
+// @resource  https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#authorization-code-grant-flow
 const authApp = asyncHandler(async (req, res) => {
   try {
     const scope = new URLSearchParams()
@@ -48,9 +50,9 @@ const authApp = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc Revoke user access token
-// @resource Revoking Access Tokens documentation:
-// @resource https://dev.twitch.tv/docs/authentication/revoke-tokens
+// @desc      Revoke user access token
+// @resource  Revoking Access Tokens documentation:
+// @resource  https://dev.twitch.tv/docs/authentication/revoke-tokens
 const revokeToken = asyncHandler(async (req, res) => {
   try {
     const accessToken = await fetchToken().then((res) => res.access_token)
@@ -68,9 +70,9 @@ const revokeToken = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc Helper function fetches Twitch profile by name and adds data to MongoDB
-// @resource Get Users documentation:
-// @resource https://dev.twitch.tv/docs/api/reference#get-users
+// @desc      Helper function fetches Twitch profile by name and adds data to MongoDB
+// @resource  Get Users documentation:
+// @resource  https://dev.twitch.tv/docs/api/reference#get-users
 const fetchTwitchByName = asyncHandler(async (name, res) => {
   // configure http request
   name = name.replace(/\s+/g, '').toLowerCase().trim()
@@ -105,7 +107,43 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
   }
 })
 
-// @desc Helper function checks for user login and authentication validations
+// @desc      Helper function fetches game profile by name and adds data to MongoDB
+// @resource  Get Games documentation:
+// @resource  https://dev.twitch.tv/docs/api/reference#get-games
+const fetchGameByName = asyncHandler(async (name, res) => {
+  // configure http request
+  const accessToken = await fetchToken().then((result) => result.access_token)
+  const options = {
+    headers: {
+      'Client-Id': process.env.CLIENT_ID,
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: { name: name },
+  }
+  // request profile data from Twitch API
+  const response = await axios.get(process.env.GET_GAMES, options)
+  const gameData = response.data.data[0]
+  if(!gameData) {
+    res.status(400)
+    throw new Error('Unable to find that game')
+  }
+  try {
+    // check for game in db
+    const gameExists = await Game.findOne({ id : gameData.id })
+    // if game doesnt exist add it
+    if (!gameExists) {
+      const game = await Game.insertMany(gameData)
+      console.log(`Successfully added ${name} to the database`.yellow)
+      return game[0]
+    }
+    return gameExists
+  } catch (error) {
+    res.status(400)
+    throw new Error(error)
+  }
+})
+
+// @desc      Helper function checks for user login and authentication validations
 const validateUser = asyncHandler(async (loggedIn, user, res) => {
   if (!user) {
     res.status(400)
@@ -123,5 +161,6 @@ module.exports = {
   authApp,
   revokeToken,
   fetchTwitchByName,
+  fetchGameByName,
   validateUser,
 }
