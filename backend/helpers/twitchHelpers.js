@@ -64,7 +64,6 @@ const revokeToken = asyncHandler(async (req, res) => {
     console.log('Token revocation successful'.blue)
     return response
   } catch (error) {
-    console.log(error)
     res.status(401)
     throw new Error('An error occuried while revoking token')
   }
@@ -75,36 +74,38 @@ const revokeToken = asyncHandler(async (req, res) => {
 // @resource  https://dev.twitch.tv/docs/api/reference#get-users
 const fetchTwitchByName = asyncHandler(async (name, res) => {
   // configure http request
-  name = name.replace(/\s+/g, '').toLowerCase().trim()
+  let login = name
+    .replace(/[\s+:]/g, '')
+    .toLowerCase()
+    .trim()
   const accessToken = await fetchToken().then((result) => result.access_token)
   const options = {
     headers: {
       'Client-Id': process.env.CLIENT_ID,
       Authorization: `Bearer ${accessToken}`,
     },
-    params: { login: name },
+    params: { login: login },
   }
   // request profile data from Twitch API
   const response = await axios.get(process.env.GET_USERS, options)
   const profile = response.data.data[0]
-  if (!profile) {
-    res.status(400)
-    throw new Error('Unable to find that Twitch profile')
-  }
-  try {
-    // check for Twitch profile in db
-    const twitchExists = await Twitch.findOne({ id : profile.id })
-    // if profile doesnt exist add it
-    if (!twitchExists) {
-      const twitch = await Twitch.insertMany(profile)
-      console.log(`Successfully added ${twitch[0].display_name}'s Twitch profile to the database`.yellow)
-      return twitch[0]
+  if (profile) {
+    try {
+      // check for Twitch profile in db
+      const twitchExists = await Twitch.findOne({ id: profile.id })
+      // if profile doesnt exist add it
+      if (!twitchExists) {
+        const twitch = await Twitch.insertMany(profile)
+        console.log(`Successfully added ${twitch[0].display_name}'s Twitch profile to the database`.yellow)
+        return twitch[0]
+      }
+      return twitchExists
+    } catch (error) {
+      res.status(400)
+      throw new Error(error)
     }
-    return twitchExists
-  } catch (error) {
-    res.status(400)
-    throw new Error(error)
   }
+  return
 })
 
 // @desc      Helper function fetches game profile by name and adds data to MongoDB
@@ -112,6 +113,7 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
 // @resource  https://dev.twitch.tv/docs/api/reference#get-games
 const fetchGameByName = asyncHandler(async (name, res) => {
   // configure http request
+  name = name.replace(/  +/g, ' ').toLowerCase().trim()
   const accessToken = await fetchToken().then((result) => result.access_token)
   const options = {
     headers: {
@@ -123,24 +125,23 @@ const fetchGameByName = asyncHandler(async (name, res) => {
   // request profile data from Twitch API
   const response = await axios.get(process.env.GET_GAMES, options)
   const gameData = response.data.data[0]
-  if(!gameData) {
-    res.status(400)
-    throw new Error('Unable to find that game')
-  }
-  try {
-    // check for game in db
-    const gameExists = await Game.findOne({ id : gameData.id })
-    // if game doesnt exist add it
-    if (!gameExists) {
-      const game = await Game.insertMany(gameData)
-      console.log(`Successfully added ${name} to the database`.yellow)
-      return game[0]
+  if (gameData) {
+    try {
+      // check for game in db
+      const gameExists = await Game.findOne({ id: gameData.id })
+      // if game doesnt exist add it
+      if (!gameExists) {
+        const game = await Game.insertMany(gameData)
+        console.log(`Successfully added ${name} to the database`.yellow)
+        return game[0]
+      }
+      return gameExists
+    } catch (error) {
+      res.status(400)
+      throw new Error(error)
     }
-    return gameExists
-  } catch (error) {
-    res.status(400)
-    throw new Error(error)
   }
+  return
 })
 
 // @desc      Helper function checks for user login and authentication validations

@@ -1,98 +1,193 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken, fetchTwitchByName, fetchGameByName } = require('../helpers/twitchHelpers')
+const {
+  fetchToken,
+  fetchTwitchByName,
+  fetchGameByName,
+} = require('../helpers/twitchHelpers')
 const Clip = require('../models/clipModel')
 
-// @desc    Get clips from Twitch by user
+// @desc    Get clips from Twitch by profile name or game title
 // @route   POST /api/clips
 // @access  Private
-const getTwitchClips = asyncHandler(async (req, res) => {
-  const { name } = req.body
+const getClips = asyncHandler(async (req, res) => {
+  // validate input
+  let { name } = req.body
   if (!name) {
     res.status(400)
-    throw new Error('Add a Twitch name to search for clips')
+    throw new Error('Add a game or to search for clips')
   }
   try {
-    // configure http request
+    // configure both http requests
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const params = await fetchTwitchByName(name, res).then((result) => result)
-    const options = {
-      headers: {
-        'Client-Id': process.env.CLIENT_ID,
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: { broadcaster_id: params.id },
-    }
-    // request data from Twitch API
-    const response = await axios.get(process.env.GET_CLIPS, options)
-    const clipData = response.data.data
-    if (!clipData[0]) {
+    const twitchRequest = fetchTwitchByName(name, res).then((result) => result)
+    const gameRequest = fetchGameByName(name, res).then((result) => result)
+    const allRequests = await Promise.all([twitchRequest, gameRequest]).then((results) => results)
+    const twitchResponse = allRequests[0]
+    const gameResponse = allRequests[1]
+    // if no data found
+    if (!twitchResponse && !gameResponse) {
       res.status(400)
-      throw new Error('No clips found for that Twitch profile')
+      throw Error('No Twitch profile or game found')
     }
-    // if previous data DOES exist then update with new set 'ordered:false'
-    try {
-      await Clip.insertMany(clipData, { ordered: false })
-      const numAdded = clipData.length
-      console.log(`Successfully added ${numAdded} of ${clipData[0].broadcaster_name}'s Twitch clips to the database`.yellow)
-    } catch (error) {
-      if (!error.message.includes('E11000')) {
-        res.status(400)
-        throw new Error(error)
+    // if only twitch profile exists
+    if (!gameResponse) {
+      let twitchName = twitchResponse.display_name
+      // configure http request
+      let options = {
+        headers: {
+          'Client-Id': process.env.CLIENT_ID,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: { broadcaster_id: twitchResponse.id },
       }
-      const numUpdated = error.result.result.nInserted
-      console.log(`Successfully updated ${numUpdated} of ${clipData[0].broadcaster_name}'s Twitch clips in the database`.yellow)
-    } finally {
-      return res.status(201).json(clipData)
-    }
-  } catch (error) {
-    res.json(400)
-    throw new Error(error)
-  }
-})
-
-// @desc    Get clips from Twitch by game
-// @route   POST /api/clips/game
-// @access  Private
-const getGameClips = asyncHandler(async (req, res) => {
-  const { game, name } = req.body
-  if (!game) {
-    return res.json('Please add a game to search for clips')
-  }
-  try {
-    const accessToken = await fetchToken().then((result) => result.access_token)
-    const params = await fetchGameByName(game, res).then((result) => result)
-    const options = {
-      headers: {
-        'Client-Id': process.env.CLIENT_ID,
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: { game_id: params.id },
-    }
-    const response = await axios.get(process.env.GET_CLIPS, options)
-    const clipData = response.data.data
-    if (!clipData[0]) {
+      // request data from Twitch API
+      let response = await axios.get(process.env.GET_CLIPS, options)
+      let clipData = response.data.data
+      if (clipData.length > 0) {
+        try {
+          // update database with new set 'ordered:false'
+          await Clip.insertMany(clipData, { ordered: false })
+          const numAdded = clipData.length
+          console.log(`Successfully added ${numAdded} of ${twitchName}'s clips to the database`.yellow)
+        } catch (error) {
+          if (!error.message.includes('E11000')) {
+            res.status(400)
+            throw new Error(error)
+          }
+          const numUpdated = error.result.result.nInserted
+          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s clips in the database`.yellow)
+        } finally {
+          return res.status(201).json({ profile: clipData })
+        }
+      }
       res.status(400)
-      throw new Error('No clips found for that game')
+      throw Error('No clips for that profile')
     }
-    // if previous data DOES exist then update with new set 'ordered:false'
-    try {
-      await Clip.insertMany(clipData, { ordered: false })
-      const numAdded = clipData.length
-      console.log(`Successfully added ${numAdded} of ${game}'s Twitch clips to the database`.yellow)
-    } catch (error) {
-      if (!error.message.includes('E11000')) {
-        res.status(400)
-        throw new Error(error)
+    // if only game name exists
+    if (!twitchResponse) {
+      let gameName = gameResponse.name
+      // configure http request
+      let options = {
+        headers: {
+          'Client-Id': process.env.CLIENT_ID,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: { game_id: gameResponse.id },
       }
-      const numUpdated = error.result.result.nInserted
-      console.log(`Successfully updated ${numUpdated} of ${game}'s clips in the database`.yellow)
-    } finally {
-      return res.json(clipData)
+      // request data from Twitch API
+      let response = await axios.get(process.env.GET_CLIPS, options)
+      let clipData = response.data.data
+      if (clipData.length > 0) {
+        try {
+          // update database with new set 'ordered:false'
+          await Clip.insertMany(clipData, { ordered: false })
+          const numAdded = clipData.length
+          console.log(`Successfully added ${numAdded} ${gameName} Twitch clips to the database`.yellow)
+        } catch (error) {
+          if (!error.message.includes('E11000')) {
+            res.status(400)
+            throw new Error(error)
+          }
+          const numUpdated = error.result.result.nInserted
+          console.log(`Successfully updated ${numUpdated} ${gameName} Twitch clips in the database`.yellow)
+        } finally {
+          return res.status(201).json({ game: clipData })
+        }
+      }
+      res.status(400)
+      throw Error('No clips for that game')
+    }
+    // if both twitch profile and game exists
+    if (twitchResponse && gameResponse) {
+      let twitchName = twitchResponse.display_name
+      let gameName = gameResponse.name
+      // configure both http requests
+      let twitchOptions = {
+        headers: {
+          'Client-Id': process.env.CLIENT_ID,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: { broadcaster_id: twitchResponse.id },
+      }
+      let gameOptions = {
+        headers: {
+          'Client-Id': process.env.CLIENT_ID,
+          Authorization: `Bearer ${accessToken}`,
+        },
+        params: { game_id: gameResponse.id },
+      }
+      // request data from Twitch API
+      const twitchClipRequest = await axios.get(process.env.GET_CLIPS, twitchOptions)
+      const gameClipRequest = await axios.get(process.env.GET_CLIPS, gameOptions)
+      const allClipRequests = await Promise.all([twitchClipRequest, gameClipRequest]).then((result) => result)
+      const twitchClipResponse = allClipRequests[0].data.data
+      const gameClipResponse = allClipRequests[1].data.data
+      // if both profile and game have clips
+      if (twitchClipResponse.length > 0 && gameClipResponse.length > 0) {
+        try {
+          // update database with new set 'ordered:false'
+          const updateTwitchClips = await Clip.insertMany(twitchClipResponse , { ordered: false })
+          const updateGameClips = await Clip.insertMany(gameClipResponse , { ordered: false })
+          await Promise.all([updateTwitchClips, updateGameClips]).then((result) => result)
+          let numTwitchAdded = twitchClipResponse.length
+          let numGameAdded = gameClipResponse.length
+          console.log(`Successfully added ${numTwitchAdded} of ${twitchName}'s Twitch clips to the database`.yellow)
+          console.log(`Successfully added ${numGameAdded} ${gameName} Twitch clips to the database`.yellow)
+        } catch (error) {
+          if (!error.message.includes('E11000')) {
+            res.status(400)
+            throw new Error(error)
+          }
+          let numUpdated = error.result.result.nInserted
+          console.log(`Successfully updated ${numUpdated} ${gameName} Twitch clips in the database`.yellow)
+        } finally {
+          return res.status(200).json({ profile: twitchClipResponse, game: gameClipResponse })
+        }
+      }
+      // if only game has clips
+      if (gameClipResponse.length > 0) {
+        try {
+          // update database with new set 'ordered:false'
+          await Clip.insertMany(gameClipResponse, { ordered: false })
+          let numAdded = gameClipResponse.length
+          console.log(`Successfully added ${numAdded} ${gameName} Twitch clips to the database`.yellow)
+        } catch (error) {
+          if (!error.message.includes('E11000')) {
+            res.status(400)
+            throw new Error(error)
+          }
+          let numUpdated = error.result.result.nInserted
+          console.log(`Successfully updated ${numUpdated} ${gameName} Twitch clips in the database`.yellow)
+        } finally {
+          return res.status(201).json({ game: gameClipResponse })
+        }
+      }
+      // if only profile has clips
+      if (twitchClipResponse.length > 0) {
+        try {
+          // update database with new set 'ordered:false'
+          await Clip.insertMany(twitchClipResponse, { ordered: false })
+          let numAdded = twitchClipResponse.length
+          console.log(`Successfully added ${numAdded} of ${twitchName}'s Twitch clips to the database`.yellow
+          )
+        } catch (error) {
+          if (!error.message.includes('E11000')) {
+            res.status(400)
+            throw new Error(error)
+          }
+          let numUpdated = error.result.result.nInserted
+          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s Twitch clips in the database`.yellow
+          )
+        } finally {
+          return res.status(201).json({ profile: twitchClipResponse })
+        }
+      }
+      return
     }
   } catch (error) {
     res.status(400)
-    throw new Error(error)
+    throw Error(error.message)
   }
 })
 
@@ -122,9 +217,8 @@ const getSavedClips = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
+  getClips,
   getSavedClips,
-  getTwitchClips,
-  getGameClips,
   saveClip,
   unsaveClip,
 }
