@@ -191,7 +191,7 @@ const getClips = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    Save clip
+// @desc    Save clip to logged in user
 // @route   PUT /api/clips/:id
 // @access  Private
 const saveClip = asyncHandler(async (req, res) => {
@@ -218,25 +218,68 @@ const saveClip = asyncHandler(async (req, res) => {
       { $addToSet: { clips: { _id: clip._id, name: clip.broadcaster_name } } },
       { new: true }
     )
-    console.log(`${loggedIn.name} saved ${clip.broadcaster_name}'s Twitch clip`.yellow)
+    console.log(`${loggedIn.name} saved one of ${clip.broadcaster_name}'s clips`.yellow)
     return res.status(200).json({ user: updatedUser, clip: clip })
   } catch (error) {
     throw Error(error)
   }
 })
 
-// @desc    Remove clip
+// @desc    Remove clip from logged in user
 // @route   PUT /api/clips/saved/:id
 // @access  Private
 const unsaveClip = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `Delete clip ${req.params.id}` })
+  let loggedIn = req.user
+  if (!loggedIn) {
+    res.status(401)
+    throw new Error('User not logged in')
+  }
+  const user = await User.findById(loggedIn._id)
+  validateUser(loggedIn, user, res)
+  // check if clip exists
+  let clipId = req.params.id
+  const clipExists = loggedIn.clips.find((clip) => clip.id === clipId)
+  if (!clipExists) {
+    res.status(400)
+    throw new Error(`Twitch clip has already been removed`)
+  }
+  try {
+    // remove clip reference from user
+    const updatedUser = await User.findByIdAndUpdate(
+      loggedIn._id,
+      { $pull: { clips: { _id: clipId } } },
+      { new: true }
+    )
+    console.log(`${loggedIn.name} deleted one of ${clipExists.name}'s clips`.yellow)
+    return res.status(200).json({ user: updatedUser })
+  } catch (error) {
+    res.status(400)
+    throw new Error(error)
+  }
 })
 
 // @desc    Get all saved clips
 // @route   GET /api/clips/saved
 // @access  Private
 const getSavedClips = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `Delete clip ${req.params.id}` })
+  let loggedIn = req.user
+  console.log(loggedIn);
+  if (!loggedIn) {
+    res.status(400)
+    throw new Error('User not logged in')
+  }
+  // find user and authorize
+  const user = await User.findById(loggedIn._id)
+  validateUser(loggedIn, user, res)
+  try {
+    let clipIds = user.clips
+    console.log(clipIds);
+    const clips = await Clip.find({ _id : { $in : clipIds } })
+    res.status(200).json({ clips: clips })
+  } catch (error) {
+    res.status(400)
+    throw new Error(error.message)
+  }
 })
 
 module.exports = {

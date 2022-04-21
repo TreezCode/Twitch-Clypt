@@ -10,7 +10,7 @@ const {
 
 router.route('/').post(getClips)
 router.route('/:id').put(protect, saveClip)
-router.route('/saved').put(protect, getSavedClips)
+router.route('/saved').get(protect, getSavedClips)
 router.route('/saved/:id').put(protect, unsaveClip)
 
 module.exports = router

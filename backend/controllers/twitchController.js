@@ -7,7 +7,7 @@ const { fetchTwitchByName, validateUser } = require('../helpers/twitchHelpers')
 // @route   POST /api/twitch
 // @access  Public
 const getTwitch = asyncHandler(async (req, res) => {
-  const { name } = req.body
+  let { name } = req.body
   if (!name) {
     res.status(400)
     throw new Error('Please add a Twitch name to the text field')
@@ -58,15 +58,15 @@ const saveTwitch = asyncHandler(async (req, res) => {
     return res.status(200).json({ user: updatedUser, twitch: twitch })
   } catch (error) {
     res.status(400)
-    throw new Error(error)
+    throw new Error(error.message)
   }
 })
 
-// @desc    Delete Twitch profile from logged in user
+// @desc    Remove Twitch profile from logged in user
 // @route   PUT /api/twitch/saved/:id
 // @access  Private
 const unsaveTwitch = asyncHandler(async (req, res) => {
-  const loggedIn = req.user
+  let loggedIn = req.user
   if (!loggedIn) {
     res.status(401)
     throw new Error('User not logged in')
@@ -74,7 +74,7 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
   const user = await User.findById(loggedIn._id)
   validateUser(loggedIn, user, res)
   // check if profile exists
-  const twitchId = req.params.id
+  let twitchId = req.params.id
   const twitchExists = loggedIn.twitches.find((twitch) => twitch.id === twitchId)
   if (!twitchExists) {
     res.status(400)
@@ -87,7 +87,7 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
       { $pull: { twitches: { _id: twitchId } } },
       { new: true }
     )
-    console.log(`${loggedIn.name} deleted ${twitchExists.name}'s Twitch profile`.yellow)
+    console.log(`${loggedIn.name} removed ${twitchExists.name}'s Twitch profile`.yellow)
     return res.status(200).json({ user: updatedUser })
   } catch (error) {
     res.status(400)
@@ -99,8 +99,7 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
 // @route   GET /api/twitch/saved
 // @access  Private
 const getSavedTwitch = asyncHandler(async (req, res) => {
-  const loggedIn = req.user
-  console.log(loggedIn);
+  let loggedIn = req.user
   if (!loggedIn) {
     res.status(400)
     throw new Error('User not logged in')
@@ -109,8 +108,7 @@ const getSavedTwitch = asyncHandler(async (req, res) => {
   const user = await User.findById(loggedIn._id)
   validateUser(loggedIn, user, res)
   try {
-    const profileIds = user.twitches
-    console.log(profileIds);
+    let profileIds = user.twitches
     const profiles = await Twitch.find({ _id : { $in : profileIds } })
     res.status(200).json({ profiles: profiles })
   } catch (error) {
