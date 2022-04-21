@@ -20,18 +20,27 @@ const userSchema = new mongoose.Schema(
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Twitch' },
         name: { type: String, required: true },
       },
+      {
+        timestamps: true,
+      }
     ],
     clips: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Clip' },
         name: { type: String, required: true },
       },
+      {
+        timestamps: true,
+      }
     ],
     games: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
         name: { type: String, required: true },
       },
+      {
+        timestamps: true,
+      }
     ],
   },
   {

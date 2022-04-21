@@ -73,7 +73,6 @@ const clipSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
-
-// clipSchema.index({'broadcaster_name' : 1}, { unique:  true})
+  )
+  
 module.exports = mongoose.model('Clip', clipSchema)

@@ -32,7 +32,7 @@ const getTwitch = asyncHandler(async (req, res) => {
 // @route   PUT /api/twitch/:id
 // @access  Private
 const saveTwitch = asyncHandler(async (req, res) => {
-  const loggedIn = req.user
+  let loggedIn = req.user
   if (!loggedIn) {
     res.status(401)
     throw new Error('User not logged in')
@@ -46,7 +46,6 @@ const saveTwitch = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error(`Twitch profile has already been saved`)
     }
-    console.log(twitchId);
     const twitch = await Twitch.findOne({ _id: twitchId })
     if (!twitch) throw new Error('Unable to find Twitch profile in database')
     // add twitch reference to user

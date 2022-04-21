@@ -4,8 +4,10 @@ const {
   fetchToken,
   fetchTwitchByName,
   fetchGameByName,
+  validateUser,
 } = require('../helpers/twitchHelpers')
 const Clip = require('../models/clipModel')
+const User = require('../models/userModel')
 
 // @desc    Get clips from Twitch by profile name or game title
 // @route   POST /api/clips
@@ -47,14 +49,16 @@ const getClips = asyncHandler(async (req, res) => {
           // update database with new set 'ordered:false'
           await Clip.insertMany(clipData, { ordered: false })
           let numAdded = clipData.length
-          console.log(`Successfully added ${numAdded} of ${twitchName}'s clips to the database`.yellow)
+          console.log(`Successfully added ${numAdded} of ${twitchName}'s clips to the database`.yellow
+          )
         } catch (error) {
           if (!error.message.includes('E11000')) {
             res.status(400)
             throw new Error(error)
           }
           let numUpdated = error.result.result.nInserted
-          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s clips in the database`.yellow)
+          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s clips in the database`.yellow
+          )
         } finally {
           return res.status(201).json({ profile: clipData })
         }
@@ -125,8 +129,8 @@ const getClips = asyncHandler(async (req, res) => {
       if (twitchClipData.length > 0 && gameClipData.length > 0) {
         try {
           // update database with new set 'ordered:false'
-          const updateTwitchClips = await Clip.insertMany(twitchClipData , { ordered: false })
-          const updateGameClips = await Clip.insertMany(gameClipData , { ordered: false })
+          const updateTwitchClips = await Clip.insertMany(twitchClipData, { ordered: false, })
+          const updateGameClips = await Clip.insertMany(gameClipData, { ordered: false, })
           await Promise.all([updateTwitchClips, updateGameClips]).then((result) => result)
           let numTwitchAdded = twitchClipData.length
           let numGameAdded = gameClipData.length
@@ -174,8 +178,7 @@ const getClips = asyncHandler(async (req, res) => {
             throw new Error(error)
           }
           let numUpdated = error.result.result.nInserted
-          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s Twitch clips in the database`.yellow
-          )
+          console.log(`Successfully updated ${numUpdated} of ${twitchName}'s Twitch clips in the database`.yellow)
         } finally {
           return res.status(201).json({ profile: twitchClipData })
         }
@@ -192,11 +195,34 @@ const getClips = asyncHandler(async (req, res) => {
 // @route   PUT /api/clips/:id
 // @access  Private
 const saveClip = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
-    res.status(400)
-    throw new Error('Please add a clip')
+  let loggedIn = req.user
+  if (!loggedIn) {
+    res.status(401)
+    throw Error('User not logged in')
   }
-  res.status(200).json({ message: 'Saved clip' })
+  const user = await User.findById(loggedIn._id)
+  validateUser(loggedIn, user, res)
+  const clipId = req.params.id
+  const clipExists = loggedIn.clips.find((clip) => clip.id === clipId)
+  if (clipExists) {
+    res.status(400)
+    throw Error(`Clip has already been saved`)
+  }
+  try {
+    const clip = await Clip.findOne({ _id: clipId })
+    if (!clip) throw new Error('Unable to find clip in database')
+    console.log(clipId)
+    // add clip reference to user
+    const updatedUser = await User.findByIdAndUpdate(
+      loggedIn._id,
+      { $addToSet: { clips: { _id: clip._id, name: clip.broadcaster_name } } },
+      { new: true }
+    )
+    console.log(`${loggedIn.name} saved ${clip.broadcaster_name}'s Twitch clip`.yellow)
+    return res.status(200).json({ user: updatedUser, clip: clip })
+  } catch (error) {
+    throw Error(error)
+  }
 })
 
 // @desc    Remove clip
