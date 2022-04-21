@@ -75,7 +75,7 @@ const revokeToken = asyncHandler(async (req, res) => {
 const fetchTwitchByName = asyncHandler(async (name, res) => {
   // configure http request
   let login = name
-    .replace(/[\s+:]/g, '')
+    .replace(/[\s+:,;]/g, '')
     .toLowerCase()
     .trim()
   const accessToken = await fetchToken().then((result) => result.access_token)

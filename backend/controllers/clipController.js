@@ -20,15 +20,13 @@ const getClips = asyncHandler(async (req, res) => {
   try {
     // configure both http requests
     const accessToken = await fetchToken().then((result) => result.access_token)
-    const twitchRequest = await fetchTwitchByName(name, res).then((result) => result)
-    const gameRequest = await fetchGameByName(name, res).then((result) => result)
-    const allRequests = await Promise.all([twitchRequest, gameRequest]).then((results) => results)
-    let twitchResponse = allRequests[0]
-    let gameResponse = allRequests[1]
+    const twitchResponse = await fetchTwitchByName(name, res).then((result) => result)
+    const gameResponse = await fetchGameByName(name, res).then((result) => result)
+    await Promise.all([twitchResponse, gameResponse]).then((results) => results)
     // if no data found
     if (!twitchResponse && !gameResponse) {
       res.status(400)
-      throw Error('No Twitch profile or game found')
+      throw Error('No Twitch profile or game with that name found')
     }
     // if only twitch profile exists
     if (!gameResponse) {
@@ -76,7 +74,7 @@ const getClips = asyncHandler(async (req, res) => {
         params: { game_id: gameResponse.id },
       }
       // request data from Twitch API
-      let response = await axios.get(process.env.GET_CLIPS, options)
+      const response = await axios.get(process.env.GET_CLIPS, options)
       let clipData = response.data.data
       if (clipData.length > 0) {
         try {
@@ -117,12 +115,12 @@ const getClips = asyncHandler(async (req, res) => {
         },
         params: { game_id: gameResponse.id },
       }
-      // request data from Twitch API
-      const twitchClipRequest = await axios.get(process.env.GET_CLIPS, twitchOptions)
-      const gameClipRequest = await axios.get(process.env.GET_CLIPS, gameOptions)
-      const allClipRequests = await Promise.all([twitchClipRequest, gameClipRequest]).then((result) => result)
-      let twitchClipData = allClipRequests[0].data.data
-      let gameClipData = allClipRequests[1].data.data
+      // request data from both Twitch API endpoints using Promise.all
+      const twitchClipResponse = await axios.get(process.env.GET_CLIPS, twitchOptions)
+      const gameClipResponse = await axios.get(process.env.GET_CLIPS, gameOptions)
+      await Promise.all([twitchClipResponse, gameClipResponse]).then((result) => result)
+      let twitchClipData = twitchClipResponse.data.data
+      let gameClipData = gameClipResponse.data.data
       // if both profile and game have clips
       if (twitchClipData.length > 0 && gameClipData.length > 0) {
         try {
@@ -169,8 +167,7 @@ const getClips = asyncHandler(async (req, res) => {
           // update database with new set 'ordered:false'
           await Clip.insertMany(twitchClipData, { ordered: false })
           let numAdded = twitchClipData.length
-          console.log(`Successfully added ${numAdded} of ${twitchName}'s Twitch clips to the database`.yellow
-          )
+          console.log(`Successfully added ${numAdded} of ${twitchName}'s Twitch clips to the database`.yellow)
         } catch (error) {
           if (!error.message.includes('E11000')) {
             res.status(400)
