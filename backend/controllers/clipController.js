@@ -18,7 +18,7 @@ const getClips = asyncHandler(async (req, res) => {
     throw new Error('Add a game or to search for clips')
   }
   try {
-    // configure both http requests
+    // configure both http requests using Promise.all
     const accessToken = await fetchToken().then((result) => result.access_token)
     const twitchResponse = await fetchTwitchByName(name, res).then((result) => result)
     const gameResponse = await fetchGameByName(name, res).then((result) => result)
@@ -40,7 +40,7 @@ const getClips = asyncHandler(async (req, res) => {
         params: { broadcaster_id: twitchResponse.id },
       }
       // request data from Twitch API
-      let response = await axios.get(process.env.GET_CLIPS, options)
+      const response = await axios.get(process.env.GET_CLIPS, options)
       let clipData = response.data.data
       if (clipData.length > 0) {
         try {
