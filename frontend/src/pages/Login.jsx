@@ -14,10 +14,8 @@ function Login() {
   });
 
   const { email, password } = formData;
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth,
   );
@@ -26,7 +24,7 @@ function Login() {
     if (isError) {
       toast.error(message);
     }
-    if (isSuccess || user) {
+    if (isSuccess && user) {
       navigate('/');
     }
     dispatch(reset());
@@ -41,7 +39,6 @@ function Login() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     const userData = {
       email,
       password,
@@ -61,7 +58,7 @@ function Login() {
         </h1>
         <p>Login to save Twitch clips</p>
       </section>
-
+      
       <section className="form">
         <form onSubmit={onSubmit}>
           <div className="form-group">

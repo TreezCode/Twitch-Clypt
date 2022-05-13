@@ -34,6 +34,14 @@ h2,
 h3 {
   font-weight: 600;
   margin-bottom: 10px;
+  text-shadow: 6px 4px 4px rgb(0, 0, 0);
+
+}
+
+h4 {
+  font-weight: 550;
+  line-height: 1.75;
+  text-shadow: 6px 4px 4px rgb(0, 0, 0);
 }
 
 .container {
@@ -116,6 +124,10 @@ h3 {
   margin: 0 auto;
 }
 
+.content {
+  padding-bottom: 10px;
+}
+
 .form-group {
   margin-bottom: 10px;
 }
@@ -151,6 +163,7 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
 }
 
 .btn svg {
@@ -169,6 +182,8 @@ h3 {
 
 .btn:hover {
   transform: scale(0.98);
+  transition: all 0.5s;
+  box-shadow: none;
 }
 
 .loadingSpinnerContainer {
@@ -216,7 +231,82 @@ h3 {
   }
 }
 
-/* Darkmode Component Styling */
+/* SearchBar Component */
+.searchInput {
+ box-shadow: inset 0px 0px 12px 2px rgba(0, 0, 0, 0.842);
+}
+
+.searchIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.clearInput {
+  cursor: pointer;
+}
+
+/* TwitchItem Component */
+.twitch {
+  padding: 1rem;
+  background: #242424;
+  border-radius: 0.5%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.twitch-name {
+  letter-spacing: 1px;
+}
+
+.twitch-profile-pic {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.twitch-profile-pic:hover {
+  box-shadow: none;
+  transform: scale(0.98);
+  transition: all 0.3s;
+}
+
+.favorite-icon-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.favorite-icon,
+.favorite-close {
+  cursor: pointer;
+}
+
+.favorite-icon:hover,
+.favorite-close:hover {
+  transform: scale(0.8);
+  transition: 0.6s;
+}
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.fa-twitch {
+  color: mediumpurple;
+  margin-bottom:5px;
+}
+
+.go-verified {
+  color: rgb(30, 125, 255);
+  position: relative;
+  left: 5px;
+}
+
+/* Darkmode Component */
 :root {
   --font: #000;
   --link: #000;

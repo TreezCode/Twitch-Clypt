@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Twitch = require('../models/twitchModel')
 const User = require('../models/userModel')
-const { fetchTwitchByName, validateUser } = require('../helpers/twitchHelpers')
+const { fetchTwitchByName } = require('../helpers/twitchHelpers')
 
 // @desc    Get Twitch profile by name and increment views
 // @route   POST /api/twitch
@@ -10,9 +10,13 @@ const getTwitch = asyncHandler(async (req, res) => {
   let { name } = req.body
   if (!name) {
     res.status(400)
-    throw new Error('Please add a Twitch name to the text field')
+    throw Error('Please add a Twitch to the text field')
   }
-  const response = await fetchTwitchByName(name, res).then((result) => result)
+  const response = await fetchTwitchByName(name, res).then(result => result)
+  if (!response) {
+    res.status(400)
+    throw Error('No Twitch profile found')
+  }
   try {
     // increment views in database
     const twitch = await Twitch.findOne({ id: response.id })
@@ -23,7 +27,7 @@ const getTwitch = asyncHandler(async (req, res) => {
     )
     return res.status(200).json(updatedTwitch)
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error)
   }
 })
@@ -37,27 +41,30 @@ const saveTwitch = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
+  // check if Twitch profile exists
+  let twitchId = req.params.id
+  const twitchExists = loggedIn.twitches.find(twitch => twitch.id === twitchId)
+  if (twitchExists) {
+    res.status(400)
+    throw new Error(`Twitch profile has already been saved`)
+  }
   try {
-    const twitchId = req.params.id
-    const twitchExists = loggedIn.twitches.find((twitch) => twitch.id === twitchId)
-    if (twitchExists) {
-      res.status(400)
-      throw new Error(`Twitch profile has already been saved`)
-    }
     const twitch = await Twitch.findOne({ _id: twitchId })
     if (!twitch) throw new Error('Unable to find Twitch profile in database')
     // add twitch reference to user
     const updatedUser = await User.findByIdAndUpdate(
       loggedIn._id,
-      { $addToSet: { twitches: { _id: twitch._id, name: twitch.display_name } }, },
+      {
+        $addToSet: { twitches: { _id: twitch._id, name: twitch.display_name, image_url: twitch.profile_image_url } },
+      },
       { new: true }
     )
-    console.log(`${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow)
+    console.log(
+      `${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow
+    )
     return res.status(200).json({ user: updatedUser, twitch: twitch })
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error.message)
   }
 })
@@ -71,26 +78,26 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
-  // check if profile exists
-  let twitchId = req.params.id
-  const twitchExists = loggedIn.twitches.find((twitch) => twitch.id === twitchId)
-  if (!twitchExists) {
-    res.status(400)
-    throw new Error(`Twitch profile has already been removed`)
-  }
   try {
+    // check if Twitch profile exists
+    let twitchId = req.params.id
+    const twitchExists = loggedIn.twitches.find(twitch => twitch.id === twitchId)
+    if (!twitchExists) {
+      res.status(400)
+      throw new Error(`Twitch profile has already been removed`)
+    }
     // remove twitch reference from user
     const updatedUser = await User.findByIdAndUpdate(
       loggedIn._id,
       { $pull: { twitches: { _id: twitchId } } },
       { new: true }
     )
-    console.log(`${loggedIn.name} removed ${twitchExists.name}'s Twitch profile`.yellow)
+    console.log(
+      `${loggedIn.name} removed ${twitchExists.name}'s Twitch profile`.yellow
+    )
     return res.status(200).json({ user: updatedUser })
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error)
   }
 })
@@ -104,15 +111,12 @@ const getSavedTwitch = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('User not logged in')
   }
-  // find user and authorize
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
   try {
-    let profileIds = user.twitches
-    const profiles = await Twitch.find({ _id : { $in : profileIds } })
-    res.status(200).json({ profiles: profiles })
+    let profileIds = loggedIn.twitches
+    const profiles = await Twitch.find({ _id: { $in: profileIds } })
+    res.status(200).json({ saved: profiles })
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error.message)
   }
 })

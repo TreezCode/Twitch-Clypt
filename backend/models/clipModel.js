@@ -2,10 +2,12 @@ const mongoose = require('mongoose')
 
 const clipSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     id: {
       type: String,
       unique: true,
@@ -26,7 +28,7 @@ const clipSchema = mongoose.Schema(
     broadcaster_name: {
       type: String,
       required: true,
-      index: true
+      index: true,
     },
     creator_id: {
       type: String,
@@ -62,17 +64,17 @@ const clipSchema = mongoose.Schema(
     },
     views: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     pagination: {
       cursor: {
         type: String,
-      }
+      },
     },
   },
   {
     timestamps: true,
   }
-  )
-  
+)
+
 module.exports = mongoose.model('Clip', clipSchema)

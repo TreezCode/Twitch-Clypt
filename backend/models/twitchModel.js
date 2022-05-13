@@ -47,7 +47,26 @@ const twitchSchema = mongoose.Schema(
     },
     views: {
       type: Number,
-      default: 1,
+      default: 0,
+    },
+    followers: {
+      total: {
+        type: Number,
+      },
+      data: [
+        {
+          from_id: { type: String },
+          from_login: { type: String },
+          from_name: { type: String },
+          to_id: { type: String },
+          to_login: { type: String },
+          to_name: { type: String },
+          followed_at: { type: String },
+        },
+      ],
+      pagination: {
+        cursor: { type: String },
+      },
     },
     clips: [
       {

@@ -1,6 +1,14 @@
 import React from 'react';
 import '../index.css';
 
+// Check the users theme preference
+const storedTheme = localStorage.getItem('theme');
+const prefersDark =
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches;
+const defaultDark =
+  storedTheme === 'dark' || (storedTheme === null && prefersDark);
+
 const setDark = () => {
   localStorage.setItem('theme', 'dark');
   document.documentElement.setAttribute('data-theme', 'dark');
@@ -10,13 +18,6 @@ const setLight = () => {
   document.documentElement.setAttribute('data-theme', 'light');
 };
 
-// Check the users theme preference
-const storedTheme = localStorage.getItem('theme');
-const prefersDark =
-  window.matchMedia &&
-  window.matchMedia('(prefers-color-scheme: dark)').matches;
-const defaultDark =
-  storedTheme === 'dark' || (storedTheme === null && prefersDark);
 if (defaultDark) {
   setDark();
 }

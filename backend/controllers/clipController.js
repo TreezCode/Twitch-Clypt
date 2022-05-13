@@ -4,7 +4,6 @@ const {
   fetchToken,
   fetchTwitchByName,
   fetchGameByName,
-  validateUser,
 } = require('../helpers/twitchHelpers')
 const Clip = require('../models/clipModel')
 const User = require('../models/userModel')
@@ -200,9 +199,7 @@ const saveClip = asyncHandler(async (req, res) => {
     res.status(401)
     throw Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
-  const clipId = req.params.id
+  let clipId = req.params.id
   const clipExists = loggedIn.clips.find((clip) => clip.id === clipId)
   if (clipExists) {
     res.status(400)
@@ -211,7 +208,6 @@ const saveClip = asyncHandler(async (req, res) => {
   try {
     const clip = await Clip.findOne({ _id: clipId })
     if (!clip) throw new Error('Unable to find clip in database')
-    console.log(clipId)
     // add clip reference to user
     const updatedUser = await User.findByIdAndUpdate(
       loggedIn._id,
@@ -234,8 +230,6 @@ const unsaveClip = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
   // check if clip exists
   let clipId = req.params.id
   const clipExists = loggedIn.clips.find((clip) => clip.id === clipId)
@@ -263,22 +257,17 @@ const unsaveClip = asyncHandler(async (req, res) => {
 // @access  Private
 const getSavedClips = asyncHandler(async (req, res) => {
   let loggedIn = req.user
-  console.log(loggedIn);
   if (!loggedIn) {
     res.status(400)
     throw new Error('User not logged in')
   }
-  // find user and authorize
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
   try {
-    let clipIds = user.clips
-    console.log(clipIds);
+    let clipIds = loggedIn.clips
     const clips = await Clip.find({ _id : { $in : clipIds } })
     res.status(200).json({ clips: clips })
   } catch (error) {
-    res.status(400)
-    throw new Error(error.message)
+    res.status(500)
+    throw new Error(error)
   }
 })
 

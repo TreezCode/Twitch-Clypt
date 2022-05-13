@@ -18,7 +18,7 @@ const fetchTopStreams = asyncHandler(async (req, res) => {
     })
     return res.json(response.data.data)
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error('Failed to load top streams')
   }
 })

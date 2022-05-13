@@ -2,10 +2,12 @@ const mongoose = require('mongoose')
 
 const gameSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     box_art_url: {
       type: {},
     },
@@ -19,7 +21,7 @@ const gameSchema = mongoose.Schema(
     },
     views: {
       type: Number,
-      default: 1,
+      default: 0,
     },
   },
   {

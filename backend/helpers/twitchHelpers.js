@@ -79,6 +79,7 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
     .toLowerCase()
     .trim()
   const accessToken = await fetchToken().then((result) => result.access_token)
+  // config first request to fetch profile data from Twitch API
   const options = {
     headers: {
       'Client-Id': process.env.CLIENT_ID,
@@ -86,9 +87,19 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
     },
     params: { login: login },
   }
-  // request profile data from Twitch API
-  const response = await axios.get(process.env.GET_USERS, options)
-  const profile = response.data.data[0]
+  const profileResponse = await axios.get(process.env.GET_USERS, options)
+  const profile = profileResponse.data.data[0]
+  // config second request to fetch follower data from Twitch API
+  const options2 = {
+    headers: {
+      'Client-Id': process.env.CLIENT_ID,
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: { to_id: profileResponse.data.data[0].id },
+  }
+  const followResponse = await axios.get(process.env.GET_FOLLOWS, options2)
+  // update profile to include follower data
+  profile.followers = followResponse.data
   if (profile) {
     try {
       // check for Twitch profile in db
@@ -144,24 +155,10 @@ const fetchGameByName = asyncHandler(async (name, res) => {
   return
 })
 
-// @desc      Helper function checks for user login and authentication validations
-const validateUser = asyncHandler(async (loggedIn, user, res) => {
-  if (!user) {
-    res.status(400)
-    throw new Error('User not found in database')
-  }
-  // authenticate user
-  if (loggedIn._id.toString() !== user._id.toString()) {
-    res.status(401)
-    throw new Error('User not authorized')
-  }
-})
-
 module.exports = {
   fetchToken,
   authApp,
   revokeToken,
   fetchTwitchByName,
   fetchGameByName,
-  validateUser,
 }

@@ -1,6 +1,6 @@
 const { default: axios } = require('axios')
 const asyncHandler = require('express-async-handler')
-const { fetchToken, fetchGameByName, validateUser } = require('../helpers/twitchHelpers')
+const { fetchToken, fetchGameByName } = require('../helpers/twitchHelpers')
 const Game = require('../models/gameModel')
 const User = require('../models/userModel')
 
@@ -19,7 +19,7 @@ const getTopGames = asyncHandler(async (req, res) => {
     })
     return res.json(response.data.data)
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error('Failed to load top games')
   }
 })
@@ -44,7 +44,7 @@ const getGame = asyncHandler(async(req, res) => {
     )
     return res.status(200).json(updatedGame)
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error)
   }
 })
@@ -54,19 +54,17 @@ const getGame = asyncHandler(async(req, res) => {
 // @access  Private
 const saveGame = asyncHandler(async(req, res) => {
   let loggedIn = req.user
+  let gameId = req.params.id
   if (!loggedIn) {
     res.status(401)
     throw new Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
+  const gameExists = loggedIn.games.find((game) => game.id === gameId)
+  if (gameExists) {
+    res.status(400)
+    throw new Error(`Game has already been saved`)
+  }
   try {
-    const gameId = req.params.id
-    const gameExists = loggedIn.games.find((game) => game.id === gameId)
-    if (gameExists) {
-      res.status(400)
-      throw new Error(`Game has already been saved`)
-    }
     const game = await Game.findOne({ _id: gameId })
     if (!game) throw new Error('Unable to find game in database')
     // add game reference to user
@@ -78,8 +76,8 @@ const saveGame = asyncHandler(async(req, res) => {
     console.log(`${loggedIn.name} saved ${game.name}`.yellow)
     return res.status(200).json({ user: updatedUser, game: game })
   } catch (error) {
-    res.status(400)
-    throw new Error(error.message)
+    res.status(500)
+    throw new Error(error)
   }
 })
 
@@ -88,14 +86,12 @@ const saveGame = asyncHandler(async(req, res) => {
 // @access  Private
 const unsaveGame = asyncHandler(async (req, res) => {
   let loggedIn = req.user
+  let gameId = req.params.id
   if (!loggedIn) {
     res.status(401)
     throw new Error('User not logged in')
   }
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
   // check if profile exists
-  let gameId = req.params.id
   const gameExists = loggedIn.games.find((game) => game.id === gameId)
   if (!gameExists) {
     res.status(400)
@@ -111,7 +107,7 @@ const unsaveGame = asyncHandler(async (req, res) => {
     console.log(`${loggedIn.name} removed ${gameExists.name}`.yellow)
     return res.status(200).json({ user: updatedUser })
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error)
   }
 })
@@ -125,15 +121,12 @@ const getSavedGames = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('User not logged in')
   }
-  // find user and authorize
-  const user = await User.findById(loggedIn._id)
-  validateUser(loggedIn, user, res)
   try {
-    let gameIds = user.games
+    let gameIds = loggedIn.games
     const games = await Game.find({ _id : { $in : gameIds } })
     res.status(200).json({ games: games })
   } catch (error) {
-    res.status(400)
+    res.status(500)
     throw new Error(error.message)
   }
 })

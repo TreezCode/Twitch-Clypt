@@ -2,11 +2,12 @@ const mongoose = require('mongoose')
 
 const streamSchema = mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: 'User',
-    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
     id: {
       type: String,
       required: true,

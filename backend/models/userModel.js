@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema(
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Twitch' },
         name: { type: String, required: true },
+        image_url: { type: String }
       },
       {
         timestamps: true,
