@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
-import { register, reset } from '../features/auth/authSlice';
+import { register, authReset } from '../features/auth/authSlice';
 import Spinner from '../components/Spinner';
 
 function Register() {
@@ -14,7 +14,6 @@ function Register() {
     password: '',
     password2: '',
   });
-
   const { email, name, password, password2 } = formData;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -29,7 +28,7 @@ function Register() {
     if (isSuccess || user) {
       navigate('/');
     }
-    dispatch(reset());
+    dispatch(authReset());
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
   const onChange = (e) => {

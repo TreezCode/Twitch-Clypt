@@ -33,6 +33,11 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      twitches: user.twitches,
+      clips: user.clips,
+      games: user.games,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
       token: generateToken(user._id),
     })
   } else {
@@ -59,6 +64,11 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      twitches: user.twitches,
+      clips: user.clips,
+      games: user.games,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
       token: generateToken(user._id),
     })
   } else {

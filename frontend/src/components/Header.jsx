@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { logout, reset } from '../features/auth/authSlice';
+import { logout, authReset } from '../features/auth/authSlice';
+import { twitchReset } from '../features/twitches/twitchSlice';
 
 function Header() {
   const navigate = useNavigate();
@@ -10,8 +11,9 @@ function Header() {
   const { user } = useSelector((state) => state.auth);
 
   const onLogout = () => {
+    dispatch(twitchReset());
+    dispatch(authReset());
     dispatch(logout());
-    dispatch(reset());
     navigate('/');
   };
 

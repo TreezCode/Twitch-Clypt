@@ -43,7 +43,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
   }
   // check if Twitch profile exists
   let twitchId = req.params.id
-  const twitchExists = loggedIn.twitches.find(twitch => twitch.id === twitchId)
+  const twitchExists = loggedIn.twitches.find(twitch => twitch._id.toString() === twitchId)
   if (twitchExists) {
     res.status(400)
     throw new Error(`Twitch profile has already been saved`)
@@ -62,10 +62,10 @@ const saveTwitch = asyncHandler(async (req, res) => {
     console.log(
       `${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow
     )
-    return res.status(200).json({ user: updatedUser, twitch: twitch })
+    return res.status(200).json(updatedUser)
   } catch (error) {
     res.status(500)
-    throw new Error(error.message)
+    throw new Error(error)
   }
 })
 

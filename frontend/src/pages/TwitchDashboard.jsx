@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import TwitchForm from '../components/TwitchForm';
 import TwitchItem from '../components/TwitchItem';
 import Spinner from '../components/Spinner';
-import { reset } from '../features/twitches/twitchSlice';
+import { favoriteReset } from '../features/twitches/twitchSlice';
 
 function TwitchDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { twitches, isLoading, isError, message } = useSelector(
+  const { twitches, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.twitches,
   );
 
@@ -24,7 +24,7 @@ function TwitchDashboard() {
       navigate('/login');
     }
     return () => {
-      dispatch(reset());
+      dispatch(favoriteReset())
     };
   }, [user, isError, message, navigate, dispatch]);
 

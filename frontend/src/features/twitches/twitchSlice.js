@@ -3,6 +3,7 @@ import twitchService from './twitchService';
 
 const initialState = {
   twitches: [],
+  users: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -48,11 +49,36 @@ export const saveTwitch = createAsyncThunk(
   },
 );
 
+// Save Twitch profile
+export const unsaveTwitch = createAsyncThunk(
+  'twitches/unsave',
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await twitchService.unsaveTwitch(id, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
 export const twitchSlice = createSlice({
   name: 'twitch',
   initialState,
   reducers: {
-    reset: (state) => initialState,
+    twitchReset: (state) => initialState,
+    favoriteReset: (state) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.isError = false;
+      state.message = '';
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -75,30 +101,32 @@ export const twitchSlice = createSlice({
       .addCase(saveTwitch.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.users = action.payload;
       })
       .addCase(saveTwitch.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(unsaveTwitch.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(unsaveTwitch.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.users = action.payload;
+        // filter to remove unsaved twitch from UI
+        // state.users = state.users.filter(
+          //   (twitch) => twitch._id !== action.payload.twitches._id,
+          // );
+      })
+      .addCase(unsaveTwitch.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
-    //   .addCase(deleteTwitch.pending, (state) => {
-    //     state.isLoading = true
-    //   })
-    //   .addCase(deleteTwitch.fulfilled, (state, action) => {
-    //     state.isLoading = false
-    //     state.isSuccess = true
-    //     // filter to remove deleted twitch from UI
-    //     state.twitches = state.twitches.filter(
-    //       (twitch) => twitch._id !== action.payload.id
-    //     )
-    //   })
-    //   .addCase(deleteTwitch.rejected, (state, action) => {
-    //     state.isLoading = false
-    //     state.isError = true
-    //     state.message = action.payload
-    //   })
   },
 });
 
-export const { reset } = twitchSlice.actions;
+export const { twitchReset, favoriteReset } = twitchSlice.actions;
 export default twitchSlice.reducer;

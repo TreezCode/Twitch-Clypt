@@ -5,9 +5,9 @@ import { GrFormClose } from 'react-icons/gr';
 function SearchBar({ placeholder, name, id, value, onChange, onClick }) {
   return (
     <div className="search">
-      <div className="inputWrapper">
+      <div className="input-wrapper">
         <input
-          className="searchInput"
+          className="search-input"
           type="text"
           placeholder={placeholder}
           name={name}
@@ -15,15 +15,14 @@ function SearchBar({ placeholder, name, id, value, onChange, onClick }) {
           value={value}
           onChange={onChange}
         />
-        <span className="searchIcon">
+        <span className="search-icon">
           {value.length !== 0 ? (
-            <GrFormClose className="clearInput" onClick={onClick} />
+            <GrFormClose className="clear-input" onClick={onClick} />
           ) : (
             <FcSearch />
           )}
         </span>
       </div>
-      <div className="dataResult"></div>
     </div>
   );
 }

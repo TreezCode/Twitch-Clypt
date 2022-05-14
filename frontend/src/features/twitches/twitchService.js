@@ -17,13 +17,25 @@ const saveTwitch = async (twitchId, token) => {
   };
   // axios params: url => data => headers
   const response = await axios.put(API_URL + twitchId, null, config);
-  console.log(response.data);
+  return response.data;
+};
+
+// Save Twitch Profile
+const unsaveTwitch = async (twitchId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  // axios params: url => data => headers
+  const response = await axios.put(API_URL +'/saved/' + twitchId, null, config);
   return response.data;
 };
 
 const twitchService = {
   getTwitch,
   saveTwitch,
+  unsaveTwitch,
 };
 
 export default twitchService;

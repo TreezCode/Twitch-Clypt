@@ -6,11 +6,13 @@ import SearchBar from './SearchBar';
 function TwitchForm() {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
+
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(getTwitch({ name }));
     setName('');
   };
+  
   const clearInput = () => {
     setName('');
   };
