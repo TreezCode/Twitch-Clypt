@@ -44,6 +44,15 @@ function TwitchItem({ twitch }) {
       </div>
       <h2 className="twitch-name">{twitch.display_name}</h2>
       <p>{followers} followers</p>
+      {twitch.broadcaster_type.length !== 0 ? (
+        <>
+        <br />
+        <p className="icon-wrapper">
+          Twitch {twitch.broadcaster_type}
+          <GoVerified className="go-verified" />
+        </p>
+        </>
+      ) : ('')}
       <br />
       <a href={twitchLink} target="_blank">
         <img
@@ -61,12 +70,7 @@ function TwitchItem({ twitch }) {
       <div className="icon-wrapper">
         <FaTwitch className="fa-twitch" />
       </div>
-      {twitch.broadcaster_type.length !== 0 ? (
-        <p className="icon-wrapper">
-          Twitch verified {twitch.broadcaster_type}
-          <GoVerified className="go-verified" />
-        </p>
-      ) : ('')}
+
       <br />
       <h4>Twitch join: </h4>
       <p>{twitchJoinDate}</p>

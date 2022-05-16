@@ -28,7 +28,7 @@ const unsaveTwitch = async (twitchId, token) => {
     },
   };
   // axios params: url => data => headers
-  const response = await axios.put(API_URL +'/saved/' + twitchId, null, config);
+  const response = await axios.put(API_URL + '/saved/' + twitchId, null, config);
   return response.data;
 };
 

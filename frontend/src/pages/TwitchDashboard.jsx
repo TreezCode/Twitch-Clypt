@@ -6,6 +6,7 @@ import TwitchForm from '../components/TwitchForm';
 import TwitchItem from '../components/TwitchItem';
 import Spinner from '../components/Spinner';
 import { favoriteReset } from '../features/twitches/twitchSlice';
+import SideBar from '../components/SideBar';
 
 function TwitchDashboard() {
   const navigate = useNavigate();
@@ -24,14 +25,14 @@ function TwitchDashboard() {
       navigate('/login');
     }
     return () => {
-      dispatch(favoriteReset())
+      dispatch(favoriteReset());
     };
   }, [user, isError, message, navigate, dispatch]);
 
   if (isLoading) {
     return <Spinner />;
   }
-  
+
   return (
     <>
       <section className="heading">
