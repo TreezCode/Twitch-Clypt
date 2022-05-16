@@ -11,9 +11,6 @@ function Header() {
   const { user } = useSelector((state) => state.auth);
 
   const onLogout = () => {
-    document.getElementById('main').classList.remove('main-collapsed')
-    document.getElementById('main').classList.remove('main-opened')
-    document.getElementById('mySideBar').classList.remove('sidebar')
     dispatch(twitchReset());
     dispatch(authReset());
     dispatch(logout());

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTwitch } from 'react-icons/fa';
 import { GoVerified } from 'react-icons/go';
@@ -6,16 +6,11 @@ import { IoMdClose } from 'react-icons/io';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import { saveTwitch, unsaveTwitch, twitchReset } from '../features/twitches/twitchSlice';
-import { getUserData } from '../features/auth/authSlice';
 
 function TwitchItem({ twitch }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { twitches } = useSelector((state) => state.twitches);
-
-  useEffect(() => {
-    dispatch(getUserData());
-  }, []);
 
   const handleSave = () => {
     dispatch(saveTwitch(twitch._id));
@@ -46,13 +41,15 @@ function TwitchItem({ twitch }) {
       <p>{followers} followers</p>
       {twitch.broadcaster_type.length !== 0 ? (
         <>
-        <br />
-        <p className="icon-wrapper">
-          Twitch {twitch.broadcaster_type}
-          <GoVerified className="go-verified" />
-        </p>
+          <br />
+          <p className="icon-wrapper">
+            Twitch {twitch.broadcaster_type}
+            <GoVerified className="go-verified" />
+          </p>
         </>
-      ) : ('')}
+      ) : (
+        ''
+      )}
       <br />
       <a href={twitchLink} target="_blank">
         <img

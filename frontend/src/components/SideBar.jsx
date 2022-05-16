@@ -1,26 +1,22 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import TwitchItem from './TwitchItem';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
 
-function SideBar() {
-  const { user } = useSelector((state) => state.auth)
-
+function SideBar({ user }) {
   useEffect(() => {
-    if(!user) {
-      return hideSideBar()
+    if (!user || user.twitches.length == 0) {
+      removeSideBarContainer();
+      return hideSideBar();
     }
-    if(user && user.twitches.length > 0) {
-      addSideBarContainer()
-      return showSideBar()
+    if (user && user.twitches.length > 0) {
+      addSideBarContainer();
+      return showSideBar();
     }
-    return hideSideBar()
   }, [user]);
 
   const toggleSideBar = () => {
     let sidebar = document.getElementById('mySideBar');
     let main = document.getElementById('main');
-    sidebar.classList.toggle('sidebar');
+    sidebar.classList.toggle('sidebar-opened');
     main.classList.toggle('main-opened');
   };
 
@@ -34,15 +30,32 @@ function SideBar() {
     toggleSideBar();
   };
 
+  const resetSideBar = () => {
+    let sidebar = document.getElementById('mySideBar');
+    let main = document.getElementById('main');
+    let toggleCollapseBtn = document.getElementById('toggleCollapseBtn');
+    let toggleOpenBtn = document.getElementById('toggleOpenBtn');
+    let toggleMessage = document.getElementById('toggleMessage');
+    sidebar.classList.remove('sidebar-opened');
+    main.classList.remove('main-opened');
+    toggleMessage.classList.add('hidden');
+    toggleCollapseBtn.classList.add('hidden');
+    toggleOpenBtn.classList.remove('hidden');
+  };
+
   const addSideBarContainer = () => {
-    document.getElementById('main').classList.add('main-collapsed')
-  }
+    document.getElementById('main').classList.add('main-collapsed');
+  };
+  const removeSideBarContainer = () => {
+    document.getElementById('main').classList.remove('main-collapsed');
+  };
   const showSideBar = () => {
-    document.getElementById('mySideBar').classList.remove('hidden')
-  }
+    document.getElementById('mySideBar').classList.remove('hidden');
+  };
   const hideSideBar = () => {
-    document.getElementById('mySideBar').classList.add('hidden')
-  }
+    resetSideBar();
+    document.getElementById('mySideBar').classList.add('hidden');
+  };
 
   return (
     <section className="sidebar-collapsed" id="mySideBar">
@@ -61,9 +74,11 @@ function SideBar() {
       </div>
       <article className="content">
         <ul>
-          {user?.twitches.length > 0 ? ( 
-            user.twitches.map(twitch => <li key={twitch._id}><a href="">{twitch.name}</a></li>)
-          ) : ('')}
+          {user?.twitches.map((twitch) => (
+            <li key={twitch._id}>
+              <a href="">{twitch.name}</a>
+            </li>
+          )) || ''}
         </ul>
       </article>
     </section>

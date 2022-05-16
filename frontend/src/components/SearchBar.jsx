@@ -16,7 +16,7 @@ function SearchBar({ placeholder, name, id, value, onChange, onClick }) {
           onChange={onChange}
         />
         <span className="search-icon">
-          {value.length !== 0 ? (
+          {value ? (
             <GrFormClose className="clear-input" onClick={onClick} />
           ) : (
             <FcSearch />
