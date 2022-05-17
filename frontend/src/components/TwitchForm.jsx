@@ -32,7 +32,7 @@ function TwitchForm() {
           />
         </div>
         <div className="form-group">
-          <button className="btn btn-block" type="submit">
+          <button className="btn btn-block search-btn" type="submit">
             Search Twitch
           </button>
         </div>

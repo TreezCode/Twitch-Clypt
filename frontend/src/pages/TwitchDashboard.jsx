@@ -6,31 +6,32 @@ import TwitchForm from '../components/TwitchForm';
 import TwitchItem from '../components/TwitchItem';
 import Spinner from '../components/Spinner';
 import SideBar from '../components/SideBar';
-import { favoriteReset } from '../features/twitches/twitchSlice';
-import { getUserData } from '../features/auth/authSlice';
+import { unsaveTwitch, twitchReset } from '../features/twitches/twitchSlice';
 
 function TwitchDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { twitches, isLoading, isError, isSuccess, message } = useSelector(
+  const { twitches, isLoading, isError, message } = useSelector(
     (state) => state.twitches,
   );
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-    if (user) {
-      dispatch(getUserData());
-    }
     if (!user) {
       navigate('/login');
     }
-    return () => {
-      dispatch(favoriteReset());
-    };
-  }, [user, isError, message, navigate, dispatch]);
+    if (isError) {
+      toast.error(message);
+      dispatch(twitchReset());
+    }
+  }, [twitches, user, isError, message, navigate, dispatch]);
+  
+
+  const handleUnsave = (e) => {
+    const removeId = e.target.dataset.remove
+    console.log(removeId);
+    dispatch(unsaveTwitch(removeId));
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -38,7 +39,7 @@ function TwitchDashboard() {
 
   return (
     <>
-      <SideBar user={user} />
+      <SideBar user={user} onClick={handleUnsave} />
       <div className="main-collapsed" id="main">
         <div className="container">
           <section className="heading">

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
-import { register, authReset } from '../features/auth/authSlice';
+import { register, authReset, getUserData } from '../features/auth/authSlice';
 import Spinner from '../components/Spinner';
 
 function Register() {
@@ -25,6 +25,7 @@ function Register() {
       toast.error(message);
     }
     if (isSuccess || user) {
+      dispatch(getUserData())
       navigate('/');
     }
     dispatch(authReset());

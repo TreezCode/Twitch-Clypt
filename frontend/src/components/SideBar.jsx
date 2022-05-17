@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
+import { IoMdClose } from 'react-icons/io';
+import { useDispatch } from 'react-redux';
+import { getUserData } from '../features/auth/authSlice';
 
-function SideBar({ user }) {
+function SideBar({ user, onClick }) {
+  const dispatch = useDispatch()
+
   useEffect(() => {
     if (!user || user.twitches.length == 0) {
       removeSideBarContainer();
@@ -12,6 +17,10 @@ function SideBar({ user }) {
       return showSideBar();
     }
   }, [user]);
+
+  useEffect(() => {
+    dispatch(getUserData())
+  },[])
 
   const toggleSideBar = () => {
     let sidebar = document.getElementById('mySideBar');
@@ -72,11 +81,15 @@ function SideBar({ user }) {
           <BsArrowBarRight size={'1.5rem'} onClick={toggleCollapse} />
         </div>
       </div>
-      <article className="content">
-        <ul>
+      <article className="sidebar-content">
+        <ul className='sidebar-list'>
           {user?.twitches.map((twitch) => (
-            <li key={twitch._id}>
-              <a href="">{twitch.name}</a>
+            <li className='sidebar-item' key={twitch._id}>
+              <img className='sidebar-thumbnail' src={twitch.image_url} alt='Twitch Image Thumbnail' />
+              <a className='sidebar-link' href="/" id='sideBarLink' >
+                {twitch.name}
+              </a>
+              <button className='sidebar-remove-btn' onClick={onClick} data-remove={twitch._id}><IoMdClose className='sidebar-remove-icon' /></button>
             </li>
           )) || ''}
         </ul>

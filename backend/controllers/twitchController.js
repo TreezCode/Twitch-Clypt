@@ -41,7 +41,7 @@ const saveTwitch = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not logged in')
   }
-  // check if Twitch profile exists
+  // check if Twitch profile exists in our database
   let twitchId = req.params.id
   const twitchExists = loggedIn.twitches.find(twitch => twitch._id.toString() === twitchId)
   if (twitchExists) {

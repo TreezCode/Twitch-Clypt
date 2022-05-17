@@ -55,7 +55,7 @@ h4 {
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
-  padding: 6rem 1rem 0 1rem;
+  padding: 6rem 0.5rem 0 0.5rem;
   text-align: center;
 }
 
@@ -100,6 +100,12 @@ h4 {
   color: var(--header-hover);
 }
 
+@media (max-width: 420px) {
+  .header ul a {
+    font-size: 0.8em;
+  }
+}
+
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Heading -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 .heading {
@@ -120,9 +126,6 @@ h4 {
 .content {
   width: 70%;
   margin: 0 auto;
-}
-
-.content {
   padding-bottom: 10px;
 }
 
@@ -146,7 +149,7 @@ h4 {
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  outline:  var(--textarea-focus);
+  outline: var(--textarea-focus);
 }
 
 .form-group label {
@@ -163,7 +166,7 @@ h4 {
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Button -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 .btn {
-  padding: 10px 20px;
+  padding: 8px 20px;
   border: 1px solid;
   border-radius: 5px;
   border-color: var(--btn-border);
@@ -178,6 +181,7 @@ h4 {
   align-items: center;
   justify-content: center;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+  transition: all 0.5s;
 }
 
 .btn svg {
@@ -196,9 +200,12 @@ h4 {
 
 .btn:hover {
   transform: scale(0.98);
-  transition: all 0.5s;
   box-shadow: none;
   color: var(--header-hover);
+}
+
+.btn:active {
+  border: 1px solid grey;
 }
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Loading Spinner -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
@@ -234,22 +241,11 @@ h4 {
   }
 }
 
-@media (max-width: 600px) {
-  .form {
-    width: 90%;
-  }
-
-  .heading h1 {
-    font-size: 2rem;
-  }
-
-  .heading p {
-    font-size: 1.5rem;
-  }
-}
-
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= SearchBar Component -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
-
+.search-btn {
+  width: 75%;
+  margin: auto;
+}
 .search-icon {
   position: absolute;
   top: 10px;
@@ -282,24 +278,11 @@ h4 {
   height: 100%;
   width: 4.5rem;
   padding-top: 3rem;
-  background-color: rgb(100, 100, 100);
+  background-color: var(--background);
   overflow-x: hidden;
   transition: 0.5s;
   z-index: 10;
-}
-
-.sidebar-collapsed a {
-  padding: 15px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #141414;
-  display: block;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.sidebar-collapsed a:hover {
-  color: #d8d8d8;
+  box-shadow: rgba(0, 0, 0, 0.5) 10px 0px 15px;
 }
 
 .sidebar-opened {
@@ -311,18 +294,23 @@ h4 {
 }
 
 .main-collapsed {
-  transition: 0.5s;
+  height: 100vh;
   margin-left: 4.5rem;
+  transition: 0.5s;
 }
 
 .toggle-collapse-container {
   width: 100%;
-  margin-top: .75rem;
-  padding: 10px 3px 10px 10px;
+  margin-top: 0.75rem;
+  padding: 5px 5px 5px 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center
+  align-items: center;
+}
+
+.toggle-open-container {
+  padding-bottom: 0.5rem;
 }
 
 .toggle-btn {
@@ -332,22 +320,111 @@ h4 {
   cursor: pointer;
   width: 1.75rem;
   height: 1.75rem;
-  color: var(--btn-font-reverse);
+  color: var(--btn-font);
   transition: 0.5s;
   border-radius: 15%;
-}
-
-.toggle-btn:hover {
-  color: var(--btn-font);
   background-color: var(--background);
 }
 
-.toggle-open-btn {
-  
+.toggle-btn:hover {
+  color: var(--font);
+  background-color: var(--twitch-background);
 }
 
 .toggle-message {
   color: var(--font);
+}
+
+.sidebar-content {
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-thumbnail {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar-thumbnail:hover {
+  transform: scale(1.1);
+  box-shadow: rgba(135, 38, 245, 0.77) 0px 0px 11px,
+    rgb(192 192 192 / 12%) -6px 5px 12px, rgb(255 255 255 / 12%) 0px 5px 6px,
+    rgb(228 228 228 / 17%) 0px 5px 5px, rgb(0 0 0 / 9%) 0px 0px 5px;
+}
+
+.sidebar-link {
+  padding: 20px;
+  text-decoration: none;
+  font-size: 1rem;
+  color: var(--font);
+  display: block;
+  transition: 0.3s;
+  cursor: pointer;
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-link:hover {
+  color: var(--header-hover);
+}
+
+.sidebar-remove-btn {
+  display: flex;
+  margin-left: auto;
+  padding: 2px;
+  color: var(--font);
+  cursor: pointer;
+  transition: 0.3s;
+  outline: none;
+  background: transparent;
+  border: 1px solid grey;
+  border-radius: 50%;
+}
+
+.sidebar-remove-btn:hover {
+  color: rgb(167, 0, 0);
+  transform: scale(0.9);
+}
+
+.sidebar-remove-btn:active {
+  outline: none;
+  color: white;
+  background: red;
+}
+
+.sidebar-remove-icon {
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .sidebar-content {
+    padding: 5px;
+  }
+  .sidebar-item {
+    padding: 5px 0;
+  }
+  .sidebar-thumbnail {
+    width: 40px;
+    height: 40px;
+  }
+  .sidebar-link {
+    padding: 5px 15px;
+  }
+}
+@media (max-width: 500px) {
+  .main-opened {
+    margin-left: 3rem !important;
+  }
 }
 
 .hidden {
@@ -374,15 +451,15 @@ h4 {
 .twitch-profile-pic {
   border-radius: 50%;
   margin-bottom: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 55px,
+    rgba(0, 0, 0, 0.12) 0px -5px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 5px 15px, rgba(0, 0, 0, 0.09) 0px 0px 15px;
+  transition: all 0.3s;
 }
 
 .twitch-profile-pic:hover {
   box-shadow: none;
   transform: scale(0.98);
-  transition: all 0.3s;
 }
 
 .favorite-icon-wrapper {
@@ -395,6 +472,7 @@ h4 {
   cursor: pointer;
   width: 2em;
   height: 2em;
+  transition: all 0.5s;
 }
 
 .favorite-icon {
@@ -408,7 +486,6 @@ h4 {
 .favorite-icon:hover,
 .favorite-close:hover {
   transform: scale(0.8);
-  transition: 0.6s;
 }
 
 .favorite-icon:hover {
@@ -504,7 +581,7 @@ h4 {
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
   height: 7px;
 }
 
@@ -544,13 +621,13 @@ body:hover {
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= SideBar Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 .sidebar-collapsed::-webkit-scrollbar-track {
-  margin-top: 3.5rem;
+  margin-top: 3.4rem;
   margin-bottom: -0.4rem;
-  background-color: var(--sidebar-background);
+  background-color: var(--background);
 }
 
 .sidebar-collapsed {
-  color: var(--sidebar-background);
+  color: var(--background);
   overflow: auto;
 }
 
@@ -573,6 +650,44 @@ body:hover {
   }
 }
 
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+@media (max-width: 600px) {
+  .form,
+  .content {
+    width: 90%;
+  }
+  .heading h1 {
+    font-size: 2rem;
+  }
+  .heading p {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .container {
+    margin: auto;
+    width: 100%;
+    padding: 4rem 0.5rem 0 0.5rem;
+  }
+  .heading {
+    padding: 5px;
+    margin-bottom: 20px;
+  }
+  .form,
+  .content {
+    width: 100%;
+  }
+  .header .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  .search-btn {
+    font-size: 14px;
+  }
+}
+
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Color Themes Start -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 :root {
@@ -583,7 +698,7 @@ body:hover {
   --header-borderbottom: #e6e6e6;
   --heading-paragraph: #828282;
   --textarea-border: #e6e6e6;
-  --textarea-focus : 1px solid rgb(155, 155, 155);
+  --textarea-focus: 1px solid rgb(155, 155, 155);
   --textarea-background: #e6e6e6;
   --card-background: #bebebe;
   --btn-border: #000;
