@@ -98,11 +98,10 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
     params: { to_id: profileResponse.data.data[0].id },
   }
   const followResponse = await axios.get(process.env.GET_FOLLOWS, options2)
-  // update profile to include follower data
-  profile.followers = followResponse.data
-  if (profile) {
+  if (profile && followResponse) {
     try {
-      // check for Twitch profile in db
+      // update profile to include follower data
+      profile.followers = followResponse.data
       const twitchExists = await Twitch.findOne({ id: profile.id })
       // if profile doesnt exist add it
       if (!twitchExists) {
@@ -110,13 +109,23 @@ const fetchTwitchByName = asyncHandler(async (name, res) => {
         console.log(`Successfully added ${twitch[0].display_name}'s Twitch profile to the database`.yellow)
         return twitch[0]
       }
-      return twitchExists
+      // update profile data view and follower count
+      const updatedTwitch = await Twitch.findByIdAndUpdate(
+        twitchExists._id,
+        {
+          view_count: profile.view_count,
+          followers: profile.followers,
+        },
+        { new: true }
+      );
+      console.log(`Successfully updated ${updatedTwitch.display_name}'s Twitch profile in the database`.yellow)
+      return updatedTwitch
     } catch (error) {
-      res.status(400)
+      console.log(error)
+      res.status(500)
       throw new Error(error)
     }
   }
-  return
 })
 
 // @desc      Helper function fetches game profile by name and adds data to MongoDB

@@ -73,7 +73,8 @@ function TwitchItem({ twitch }) {
       <h4>Twitch join: </h4>
       <p>{twitchJoinDate}</p>
       <br />
-      <p>{twitch.description}</p>
+      <h4>About {twitch.display_name} </h4>
+      <p className='twitch-about'>{twitch.description}</p>
       <br />
       <h4>Twitch views: </h4>
       <p>{twitch.view_count.toLocaleString('en-US')}</p>

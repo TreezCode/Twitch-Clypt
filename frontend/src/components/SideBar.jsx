@@ -3,28 +3,29 @@ import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
+import { getTwitch } from '../features/twitches/twitchSlice';
 
 function SideBar({ user, onClick }) {
   const dispatch = useDispatch();
-  const [hasSideBar, setHasSideBar] = useState('')
-  const [favorites, setFavorites] = useState(user?.twitches)
-  
+  const [hasSideBar, setHasSideBar] = useState('');
+  const [favorites, setFavorites] = useState(user?.twitches);
+
   // fetch user data
   useEffect(() => {
     dispatch(getUserData());
   }, []);
-  
+
   // set state of sidebar contingent on user data
   useEffect(() => {
-    setFavorites(user?.twitches)
+    setFavorites(user?.twitches);
     if (favorites.length === 0) {
       setHasSideBar(false);
     }
     if (favorites.length > 0) {
-      setHasSideBar(true)
+      setHasSideBar(true);
     }
   }, [user, favorites]);
-  
+
   // handle sidebar visibility
   useEffect(() => {
     if (hasSideBar) {
@@ -51,16 +52,20 @@ function SideBar({ user, onClick }) {
   let sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
   let sidebarOpenBtn = document.getElementById('sidebarOpenBtn');
   let sidebarMessage = document.getElementById('sidebarMessage');
+  let sidebarItems = document.querySelectorAll('#sidebarList>li');
   let sidebarLinks = document.querySelectorAll('#sidebarList>li>a');
   let sidebarRemoveBtns = document.querySelectorAll('#sidebarList>li>button');
+  let sidebarImgs = document.querySelectorAll('#sidebarList>li>img');
 
   // iterate through sidebar list items to toggle class
   const toggleListItems = () => {
     for (let i = 0; i < sidebarLinks.length; i++) {
       sidebarLinks[i].classList.toggle('hidden');
       sidebarRemoveBtns[i].classList.toggle('hidden');
+      sidebarItems[i].classList.toggle('sidebar-item-collapsed');
     }
   };
+
   // handle onclick for toggling collapse
   const toggleCollapse = () => {
     sidebar.classList.toggle('sidebar-opened');
@@ -92,14 +97,24 @@ function SideBar({ user, onClick }) {
       <article className="sidebar-content">
         <ul className="sidebar-list" id="sidebarList">
           {user?.twitches.map((twitch) => (
-            <li className="sidebar-item" key={twitch._id}>
+            <li className="sidebar-item sidebar-item-collapsed" key={twitch._id}>
               <img
                 className="sidebar-thumbnail sidebar-thumbnail-collapsed"
                 src={twitch.image_url}
                 alt="Twitch Image Thumbnail"
                 draggable={false}
+                onClick={() => {
+                  dispatch(getTwitch({ name: twitch.name }));
+                }}
               />
-              <a className="sidebar-link hidden" href="/" id="sideBarLink">
+              <a
+                className="sidebar-link hidden"
+                href="#"
+                id="sideBarLink"
+                onClick={() => {
+                  dispatch(getTwitch({ name: twitch.name }));
+                }}
+              >
                 {twitch.name}
               </a>
               <button

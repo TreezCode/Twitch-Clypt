@@ -287,7 +287,6 @@ img {
   transition: 0.5s;
   z-index: 10;
   box-shadow: var(--purple-glow-sm);
-  cursor: grab;
   user-select: none;
 }
 
@@ -351,6 +350,19 @@ img {
 .sidebar-item {
   display: flex;
   align-items: center;
+  padding: 0.25rem;
+  margin: 1rem 0 ;
+  border-radius: 5px;
+  transition: 1s;
+}
+
+.sidebar-item:hover {
+  color: var(--font);
+  box-shadow: inset rgba(135, 38, 245, 0.356) 7px 0px 5px,
+    inset rgba(111, 14, 201, 0.473) -7px 0px 12px,
+    inset rgba(120, 10, 194, 0.295) 0px 0px 6px,
+    inset rgba(148, 71, 192, 0.17) 0px 5px 5px,
+    inset rgba(209, 209, 209, 0.514) 0px 0px 5px;
 }
 
 .sidebar-thumbnail {
@@ -359,6 +371,7 @@ img {
   border-radius: 50%;
   cursor: pointer;
   transition: 0.3s;
+  margin-bottom: 0.25rem;
 }
 
 .sidebar-thumbnail:hover {
@@ -366,30 +379,36 @@ img {
   box-shadow: var(--purple-glow-thumbnail);
 }
 
-.sidebar-thumbnail-collapsed {
-  margin-bottom: 1rem;
+.sidebar-item-collapsed {
+  padding: 0;
+}
+
+.sidebar-item-collapsed:hover {
+  box-shadow: none;
 }
 
 .sidebar-link {
-  padding: 20px;
   text-decoration: none;
   font-size: 1rem;
-  color: var(--font);
+  color: rgb(246, 225, 255);
   display: block;
   transition: 0.3s;
   cursor: pointer;
+  width: 95%;
   max-width: 9rem;
+  margin-left: 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .sidebar-link:hover {
-  color: var(--header-hover);
+  color: var(--font);
 }
 
 .sidebar-remove-btn {
   display: flex;
   margin-left: auto;
+  margin-right: 0.25rem;
   padding: 2px;
   color: var(--font);
   cursor: pointer;
@@ -425,12 +444,16 @@ img {
   .sidebar-thumbnail {
     width: 40px;
     height: 40px;
+    margin-bottom: 0;
   }
   .sidebar-thumbnail:hover {
     transform: scale(1.05);
   }
   .sidebar-link {
-    padding: 5px 15px;
+    padding: 0 10px;
+  }
+  .sidebar-link {
+    margin: 0.25rem 0.5rem;
   }
 }
 @media (max-width: 500px) {
@@ -453,6 +476,7 @@ img {
   padding: 1rem;
   background: var(--twitch-background);
   border-radius: 0.5%;
+  border: 1px solid #2e2e2e;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -470,6 +494,14 @@ img {
 .twitch-profile-pic:hover {
   transform: scale(0.98);
   box-shadow: var(--purple-glow-sm);
+}
+
+.twitch-about {
+  background: #383838;
+  border-radius: 5px;
+  border: 1px solid #0c0c0c;
+  padding: 1rem;
+  font-size: 0.95rem;
 }
 
 .favorite-icon-wrapper {
@@ -719,7 +751,7 @@ body:hover {
   --spinner-background: rgba(0, 0, 0, 0.5);
   --spinner: #000 transparent #555 transparent;
   --sidebar-background: rgb(100, 100, 100);
-  --twitch-background: #242424;
+  --twitch-background: #1b1b1b;
   --scrollbar-thumb: rgb(51, 51, 51);
   --purple-glow-lg: rgba(135, 38, 245, 0.356) 7px 1px 15px,
     rgba(111, 14, 201, 0.473) -7px 2px 12px,

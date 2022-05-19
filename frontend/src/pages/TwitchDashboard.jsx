@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -25,7 +25,6 @@ function TwitchDashboard() {
       dispatch(twitchReset());
     }
   }, [twitches, user, isError, message, navigate, dispatch]);
-  
 
   const handleUnsave = (e) => {
     const removeId = e.target.dataset.remove
@@ -38,7 +37,7 @@ function TwitchDashboard() {
 
   return (
     <>
-      <SideBar user={user} onClick={handleUnsave} />
+      <SideBar user={user} twitches={twitches} onClick={handleUnsave} />
       <div className="main-collapsed" id="main">
         <div className="container">
           <section className="heading">
