@@ -50,21 +50,22 @@ function TwitchItem({ twitch }) {
         ''
       )}
       <br />
-      <a href={twitchLink} target="_blank">
-        <img
-          className="twitch-profile-pic"
-          src={twitch.profile_image_url}
-          alt="Twitch Profile Picture"
-          srcSet={[twitch.profile_image_url + ' 1000w']}
-          sizes="
-        (max-width: 400px) calc(190vw - 2rem), 
-        (max-width: 500px) calc(130vw - 2rem), 
-        (max-width: 750px) calc(120vw - 2rem),
-        (max-width: 960px) calc(100vw - 2rem),
-        calc(95vw - 8rem - 2rem)
-        "
-        />
-      </a>
+        <a href={twitchLink} target="_blank">
+          <img
+            className="twitch-profile-pic"
+            src={twitch.profile_image_url}
+            alt="Twitch Profile Picture"
+            draggable={false}
+            srcSet={[twitch.profile_image_url + ' 1000w']}
+            sizes="
+          (max-width: 400px) calc(190vw - 2rem), 
+          (max-width: 500px) calc(130vw - 2rem), 
+          (max-width: 750px) calc(120vw - 2rem),
+          (max-width: 960px) calc(100vw - 2rem),
+          calc(95vw - 8rem - 2rem)
+          "
+          />
+        </a>
       <div className="icon-wrapper">
         <FaTwitch className="fa-twitch" />
       </div>
@@ -72,10 +73,10 @@ function TwitchItem({ twitch }) {
       <h4>Twitch join: </h4>
       <p>{twitchJoinDate}</p>
       <br />
+      <p>{twitch.description}</p>
+      <br />
       <h4>Twitch views: </h4>
       <p>{twitch.view_count.toLocaleString('en-US')}</p>
-      <br />
-      <p>{twitch.description}</p>
     </div>
   );
 }

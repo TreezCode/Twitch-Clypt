@@ -29,7 +29,6 @@ function TwitchDashboard() {
 
   const handleUnsave = (e) => {
     const removeId = e.target.dataset.remove
-    console.log(removeId);
     dispatch(unsaveTwitch(removeId));
   };
 

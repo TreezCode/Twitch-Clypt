@@ -47,6 +47,10 @@ h4 {
   text-shadow: 6px 4px 4px rgb(0, 0, 0);
 }
 
+img {
+  user-select: none;
+}
+
 *:focus-visible {
   outline: -webkit-focus-ring-color none;
 }
@@ -282,11 +286,14 @@ h4 {
   overflow-x: hidden;
   transition: 0.5s;
   z-index: 10;
-  box-shadow: rgba(0, 0, 0, 0.5) 10px 0px 15px;
+  box-shadow: var(--purple-glow-sm);
+  cursor: grab;
+  user-select: none;
 }
 
 .sidebar-opened {
   width: 15rem !important;
+  box-shadow: var(--purple-glow-lg);
 }
 
 .main-opened {
@@ -356,9 +363,11 @@ h4 {
 
 .sidebar-thumbnail:hover {
   transform: scale(1.1);
-  box-shadow: rgba(135, 38, 245, 0.77) 0px 0px 11px,
-    rgb(192 192 192 / 12%) -6px 5px 12px, rgb(255 255 255 / 12%) 0px 5px 6px,
-    rgb(228 228 228 / 17%) 0px 5px 5px, rgb(0 0 0 / 9%) 0px 0px 5px;
+  box-shadow: var(--purple-glow-thumbnail);
+}
+
+.sidebar-thumbnail-collapsed {
+  margin-bottom: 1rem;
 }
 
 .sidebar-link {
@@ -417,6 +426,9 @@ h4 {
     width: 40px;
     height: 40px;
   }
+  .sidebar-thumbnail:hover {
+    transform: scale(1.05);
+  }
   .sidebar-link {
     padding: 5px 15px;
   }
@@ -451,15 +463,13 @@ h4 {
 .twitch-profile-pic {
   border-radius: 50%;
   margin-bottom: 1rem;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 55px,
-    rgba(0, 0, 0, 0.12) 0px -5px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 5px 15px, rgba(0, 0, 0, 0.09) 0px 0px 15px;
-  transition: all 0.3s;
+  box-shadow: var(--purple-glow-lg);
+  transition: all 0.5s;
 }
 
 .twitch-profile-pic:hover {
-  box-shadow: none;
   transform: scale(0.98);
+  box-shadow: var(--purple-glow-sm);
 }
 
 .favorite-icon-wrapper {
@@ -711,6 +721,17 @@ body:hover {
   --sidebar-background: rgb(100, 100, 100);
   --twitch-background: #242424;
   --scrollbar-thumb: rgb(51, 51, 51);
+  --purple-glow-lg: rgba(135, 38, 245, 0.356) 7px 1px 15px,
+    rgba(111, 14, 201, 0.473) -7px 2px 12px,
+    rgba(120, 10, 194, 0.295) 0px 5px 6px, rgba(148, 71, 192, 0.17) 0px 5px 5px,
+    rgba(209, 209, 209, 0.514) 0px 0px 15px;
+  --purple-glow-sm: rgba(125, 17, 248, 0.77) 0px 0px 7px,
+    rgba(192, 192, 192, 0.37) -2px 2px 8px,
+    rgba(255, 255, 255, 0.363) 0px 0px 2px, rgb(228 228 228 / 17%) 2px -4px 7px,
+    rgb(0 0 0 / 9%) 0px 0px 5px;
+  --purple-glow-thumbnail: rgba(135, 38, 245, 0.77) 0px 0px 10px,
+    rgb(192 192 192 / 12%) 0px 5px 12px, rgb(255 255 255 / 12%) 0px 5px 6px,
+    rgb(228 228 228 / 17%) 0px 5px 5px, rgb(0 0 0 / 9%) 0px 0px 5px;
 }
 
 [data-theme='dark'] {

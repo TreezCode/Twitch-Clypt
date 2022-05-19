@@ -20,7 +20,7 @@ function Header() {
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">Twitch Clypt</Link>
+        <Link to="/login">Twitch Clypt</Link>
       </div>
       <ul>
         {user ? (
