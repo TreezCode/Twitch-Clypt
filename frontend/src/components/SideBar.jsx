@@ -18,10 +18,11 @@ function SideBar({ user, onClick }) {
   // set state of sidebar contingent on user data
   useEffect(() => {
     setFavorites(user?.twitches);
-    if (favorites.length === 0) {
+
+    if (user && favorites.length === 0) {
       setHasSideBar(false);
     }
-    if (favorites.length > 0) {
+    if (user && favorites.length > 0) {
       setHasSideBar(true);
     }
   }, [user, favorites]);
@@ -63,6 +64,7 @@ function SideBar({ user, onClick }) {
       sidebarLinks[i].classList.toggle('hidden');
       sidebarRemoveBtns[i].classList.toggle('hidden');
       sidebarItems[i].classList.toggle('sidebar-item-collapsed');
+      sidebarImgs[i].classList.toggle('sidebar-thumbnail-collapsed');
     }
   };
 

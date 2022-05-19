@@ -1,8 +1,16 @@
 import React from 'react';
 import { FcSearch } from 'react-icons/fc';
-import { GrFormClose } from 'react-icons/gr';
+import { IoMdClose } from 'react-icons/io';
 
-function SearchBar({ placeholder, name, id, value, onChange, onClick }) {
+function SearchBar({
+  placeholder,
+  name,
+  id,
+  value,
+  onChange,
+  onClick,
+  onSubmit,
+}) {
   return (
     <div className="search">
       <div className="input-wrapper">
@@ -15,13 +23,18 @@ function SearchBar({ placeholder, name, id, value, onChange, onClick }) {
           value={value}
           onChange={onChange}
         />
-        <span className="search-icon">
+        <div className="input-icons">
           {value ? (
-            <GrFormClose className="clear-input" onClick={onClick} />
+            <span className="clear-icon-wrapper">
+              <IoMdClose className="clear-icon" onClick={onClick} />
+            </span>
           ) : (
-            <FcSearch />
+            ''
           )}
-        </span>
+          <button className='search-icon-btn' type='submit' onClick={onSubmit}>
+            <FcSearch className='search-icon' />
+          </button>
+        </div>
       </div>
     </div>
   );

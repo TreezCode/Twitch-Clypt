@@ -18,23 +18,18 @@ function TwitchForm() {
   };
 
   return (
-    <section className="form">
-      <form onSubmit={onSubmit}>
+    <section className='search-form'>
+      <form>
         <div className="form-group">
-          <label htmlFor="name">Search</label>
           <SearchBar
-            placeholder="Search for Twitch profiles"
+            placeholder="Search Twitch"
             name="name"
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             onClick={clearInput}
+            onSubmit={onSubmit}
           />
-        </div>
-        <div className="form-group">
-          <button className="btn btn-block search-btn" type="submit">
-            Search Twitch
-          </button>
         </div>
       </form>
     </section>

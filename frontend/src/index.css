@@ -23,6 +23,7 @@ a {
 
 p {
   line-height: 1.7;
+  font-weight: 100;
 }
 
 ul {
@@ -36,13 +37,13 @@ li {
 h1,
 h2,
 h3 {
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 10px;
   text-shadow: 6px 4px 4px rgb(0, 0, 0);
 }
 
 h4 {
-  font-weight: 550;
+  font-weight: 400;
   line-height: 1.75;
   text-shadow: 6px 4px 4px rgb(0, 0, 0);
 }
@@ -68,8 +69,8 @@ img {
 .header {
   position: fixed;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
   padding: 10px 10px;
   border-bottom: 1px solid;
@@ -78,6 +79,10 @@ img {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-bottom-color: var(--header-borderbottom);
   background-color: var(--background);
+}
+
+.header-logged-out {
+  grid-template-columns: 1fr 1fr;
 }
 
 .header ul {
@@ -99,14 +104,27 @@ img {
   margin-right: 5px;
 }
 
+.header-links {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logo {
+  width: 6.5rem;
+}
+
 .logo a:hover,
 .header ul li a:hover {
   color: var(--header-hover);
 }
 
-@media (max-width: 420px) {
+@media (max-width: 450px) {
   .header ul a {
     font-size: 0.8em;
+  }
+  .logo {
+    width: 5rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -164,7 +182,14 @@ img {
 }
 
 .form-group input {
-  background-color: var(--textarea-background);
+  background: #0a0a0a;
+  color: white;
+}
+
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+  color: white;
 }
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Button -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
@@ -176,7 +201,7 @@ img {
   border-color: var(--btn-border);
   background: var(--btn-background);
   color: var(--btn-font);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   text-align: center;
@@ -246,27 +271,104 @@ img {
 }
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= SearchBar Component -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
-.search-btn {
-  width: 75%;
-  margin: auto;
+
+.search-form .form-group,
+.search-form input {
+  margin: 0;
 }
-.search-icon {
+
+.search-form form {
+  width: 70%;
+}
+
+.search-form input {
+  padding: 7px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-left: 2rem;
+}
+
+.input-icons {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 5px;
 }
 
 .input-wrapper {
   position: relative;
 }
 
-.clear-input {
+.clear-icon-wrapper {
+  display: inline-flex;
+  border-right: 1px solid rgb(165, 165, 165);
+}
+
+.clear-icon,
+.search-icon {
+  transition: 0.3s;
+  width: 18px;
+  height: 18px;
+}
+
+.search-icon-btn {
+  background: none;
+  border: none;
+}
+
+.search-icon {
+  margin-left: 0.25rem;
   cursor: pointer;
 }
 
+.clear-icon {
+  margin-right: 0.25rem;
+  color: rgb(1 11 131);
+}
+
+.search-icon:hover {
+  transform: scale(1.2);
+}
+
+.clear-icon:hover {
+  color: #701424;
+  transform: scale(0.8);
+}
+
 @media (max-width: 600px) {
+  .search-form {
+    margin-left: 1rem;
+  }
+  .search-form input {
+    padding: 5px;
+  }
   .search-input {
     font-size: 0.75em;
+  }
+  .input-icons {
+    top: 6px;
+  }
+}
+@media (max-width: 507px) {
+  .search-form form {
+    width: 85%;
+  }
+  .search-input {
+    font-size: 0.7em;
+  }
+  .input-icons {
+    top: 5px;
+  }
+}
+@media (max-width: 300px) {
+  .search-form {
+    margin-left: 0.25rem;
+  }
+  .search-form form {
+    width: 100%;
   }
 }
 
@@ -344,19 +446,19 @@ img {
 .sidebar-content {
   margin: 0 auto;
   width: 100%;
-  padding: 10px;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
   padding: 0.25rem;
-  margin: 1rem 0 ;
+  margin: 0.75rem -1rem;
   border-radius: 5px;
-  transition: 1s;
+  transition: 0.5s;
 }
 
 .sidebar-item:hover {
+  transform: scale(0.98);
   color: var(--font);
   box-shadow: inset rgba(135, 38, 245, 0.356) 7px 0px 5px,
     inset rgba(111, 14, 201, 0.473) -7px 0px 12px,
@@ -371,7 +473,12 @@ img {
   border-radius: 50%;
   cursor: pointer;
   transition: 0.3s;
-  margin-bottom: 0.25rem;
+  margin-left: 1rem;
+}
+
+.sidebar-thumbnail-collapsed {
+  padding: 0;
+  margin-left: 0.75rem;
 }
 
 .sidebar-thumbnail:hover {
@@ -381,6 +488,7 @@ img {
 
 .sidebar-item-collapsed {
   padding: 0;
+  margin-left: -0.25rem;
 }
 
 .sidebar-item-collapsed:hover {
@@ -390,9 +498,8 @@ img {
 .sidebar-link {
   text-decoration: none;
   font-size: 1rem;
-  color: rgb(246, 225, 255);
+  color: white;
   display: block;
-  transition: 0.3s;
   cursor: pointer;
   width: 95%;
   max-width: 9rem;
@@ -402,13 +509,13 @@ img {
 }
 
 .sidebar-link:hover {
-  color: var(--font);
+  color: rgb(236, 208, 252);
 }
 
 .sidebar-remove-btn {
   display: flex;
   margin-left: auto;
-  margin-right: 0.25rem;
+  margin-right: 1.25rem;
   padding: 2px;
   color: var(--font);
   cursor: pointer;
@@ -417,6 +524,7 @@ img {
   background: transparent;
   border: 1px solid grey;
   border-radius: 50%;
+  cursor: context-menu;
 }
 
 .sidebar-remove-btn:hover {
@@ -440,6 +548,9 @@ img {
   }
   .sidebar-item {
     padding: 5px 0;
+  }
+  .sidebar-thumbnail-collapsed {
+    margin-left: 0.25rem;
   }
   .sidebar-thumbnail {
     width: 40px;
@@ -465,7 +576,6 @@ img {
 .hidden {
   display: none;
 }
-
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Twitch Component -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 .content {
@@ -623,8 +733,8 @@ img {
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 7px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -699,6 +809,10 @@ body:hover {
   .content {
     width: 90%;
   }
+  .header .btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
   .heading h1 {
     font-size: 2rem;
   }
@@ -722,7 +836,7 @@ body:hover {
     width: 100%;
   }
   .header .btn {
-    padding: 5px 10px;
+    padding: 6px 8px;
     font-size: 12px;
   }
   .search-btn {
@@ -740,7 +854,7 @@ body:hover {
   --header-borderbottom: #e6e6e6;
   --heading-paragraph: #828282;
   --textarea-border: #e6e6e6;
-  --textarea-focus: 1px solid rgb(155, 155, 155);
+  --textarea-focus: 1px solid rgb(102, 102, 102);
   --textarea-background: #e6e6e6;
   --card-background: #bebebe;
   --btn-border: #000;

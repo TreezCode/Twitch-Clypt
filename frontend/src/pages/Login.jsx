@@ -23,7 +23,6 @@ function Login() {
       toast.error(message);
     }
     if (isSuccess && user) {
-      dispatch(getUserData());
       navigate('/');
     }
     dispatch(authReset());

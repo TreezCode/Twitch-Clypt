@@ -44,7 +44,6 @@ function TwitchDashboard() {
             <h1>Welcome {user && user.name}</h1>
             <p>Twitch Dashboard</p>
           </section>
-          <TwitchForm />
           <section className="content">
             {twitches.id ? (
               <div className="twitches">
