@@ -326,7 +326,7 @@ img {
 
 .clear-icon {
   margin-right: 0.25rem;
-  color: rgb(1 11 131);
+  color: rgb(18, 30, 165);
 }
 
 .search-icon:hover {
@@ -334,7 +334,7 @@ img {
 }
 
 .clear-icon:hover {
-  color: #701424;
+  color: #6b6b6b;
   transform: scale(0.8);
 }
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
 import { getTwitch } from '../features/twitches/twitchSlice';
 
-function SideBar({ user, onClick }) {
+function SideBar() {
   const dispatch = useDispatch();
+  const { user } = useSelector(state => state.auth)
   const [hasSideBar, setHasSideBar] = useState('');
   const [favorites, setFavorites] = useState(user?.twitches);
 
@@ -78,6 +79,11 @@ function SideBar({ user, onClick }) {
     toggleListItems();
   };
 
+  const handleUnsave = (e) => {
+    const removeId = e.target.dataset.remove
+    dispatch(unsaveTwitch(removeId));
+  };
+
   return (
     <section className="sidebar-collapsed" id="mySideBar">
       <div className="toggle-collapse-container">
@@ -122,7 +128,7 @@ function SideBar({ user, onClick }) {
               <button
                 className="sidebar-remove-btn hidden"
                 id="sideBarRemoveBtn"
-                onClick={onClick}
+                onClick={handleUnsave}
                 data-remove={twitch._id}
               >
                 <IoMdClose className="sidebar-remove-icon" />
