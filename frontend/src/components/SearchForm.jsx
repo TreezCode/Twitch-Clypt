@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { getTwitch } from '../features/twitches/twitchSlice';
 import SearchBar from './SearchBar';
 
-function TwitchForm() {
+function SearchForm() {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
 
@@ -36,4 +36,4 @@ function TwitchForm() {
   );
 }
 
-export default TwitchForm;
+export default SearchForm;

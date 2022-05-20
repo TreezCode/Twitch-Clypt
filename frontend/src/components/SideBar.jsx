@@ -1,46 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../features/auth/authSlice';
-import { getTwitch } from '../features/twitches/twitchSlice';
+import { getTwitch, unsaveTwitch } from '../features/twitches/twitchSlice';
 
 function SideBar() {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth)
-  const [hasSideBar, setHasSideBar] = useState('');
-  const [favorites, setFavorites] = useState(user?.twitches);
+  const { saved } = useSelector(state => state.twitches)
 
   // fetch user data
   useEffect(() => {
     dispatch(getUserData());
-  }, []);
-
+  }, [saved]);
+  
   // set state of sidebar contingent on user data
   useEffect(() => {
-    setFavorites(user?.twitches);
-
-    if (user && favorites.length === 0) {
-      setHasSideBar(false);
-    }
-    if (user && favorites.length > 0) {
-      setHasSideBar(true);
-    }
-  }, [user, favorites]);
-
-  // handle sidebar visibility
-  useEffect(() => {
-    if (hasSideBar) {
-      addSideBar();
-    }
-    if (!hasSideBar) {
+    if(!user) {
       removeSideBar();
     }
-  }, [hasSideBar]);
+    if (user?.twitches.length === 0) {
+      removeSideBar();
+    }
+    if (user && user?.twitches.length > 0) {
+      addSideBar();
+    }
+  }, [user]);
+
+  // handle unsaving profile from sidebar
+  const handleUnsave = (e) => {
+    const removeId = e.target.dataset.remove
+    dispatch(unsaveTwitch(removeId));
+  };
 
   // sidebar visibilty helper functions
   const removeSideBar = () => {
     document.getElementById('main').classList.remove('main-collapsed');
+    document.getElementById('main').classList.remove('main-opened');
+    document.getElementById('mySideBar').classList.remove('sidebar-opened');
     document.getElementById('mySideBar').classList.add('hidden');
   };
   const addSideBar = () => {
@@ -77,11 +75,6 @@ function SideBar() {
     sidebarOpenBtn.classList.toggle('hidden');
     sidebarMessage.classList.toggle('hidden');
     toggleListItems();
-  };
-
-  const handleUnsave = (e) => {
-    const removeId = e.target.dataset.remove
-    dispatch(unsaveTwitch(removeId));
   };
 
   return (

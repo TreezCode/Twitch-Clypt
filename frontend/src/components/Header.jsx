@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { logout, authReset } from '../features/auth/authSlice';
 import { twitchReset } from '../features/twitches/twitchSlice';
-import TwitchForm from './TwitchForm';
+import SearchForm from './SearchForm';
 
 function Header() {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function Header() {
         <Link to="/login">Twitch Clypt</Link>
       </div>
       {user ? (
-        <TwitchForm />
+        <SearchForm />
       ):('')}
       <div className='header-links'>
         <ul>

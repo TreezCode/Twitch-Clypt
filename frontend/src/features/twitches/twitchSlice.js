@@ -3,7 +3,7 @@ import twitchService from './twitchService';
 
 const initialState = {
   twitches: [],
-  users: [],
+  saved: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -101,7 +101,7 @@ export const twitchSlice = createSlice({
       .addCase(saveTwitch.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.users = action.payload;
+        state.saved = action.payload;
       })
       .addCase(saveTwitch.rejected, (state, action) => {
         state.isLoading = false;
@@ -114,9 +114,9 @@ export const twitchSlice = createSlice({
       .addCase(unsaveTwitch.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.users = action.payload;
+        state.saved = action.payload;
         // filter to remove unsaved twitch from UI
-        // state.users = state.users.filter(
+        // state.saved = state.saved.filter(
           //   (twitch) => twitch._id !== action.payload.twitches._id,
           // );
       })
