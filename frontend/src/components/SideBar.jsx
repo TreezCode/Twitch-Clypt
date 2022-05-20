@@ -6,67 +6,51 @@ import { getUserData } from '../features/auth/authSlice';
 import { getTwitch, unsaveTwitch } from '../features/twitches/twitchSlice';
 
 function SideBar() {
-  // sidebar helper functions
-  const removeSideBar = () => {
-    document.getElementById('main').classList.remove('main-collapsed');
-    document.getElementById('main').classList.remove('main-opened');
-    document.getElementById('mySideBar').classList.remove('sidebar-opened');
-    document.getElementById('mySideBar').classList.add('hidden');
-  };
-  const addSideBar = () => {
-    document.getElementById('main').classList.add('main-collapsed');
-    document.getElementById('mySideBar').classList.remove('sidebar-opened');
-    document.getElementById('mySideBar').classList.remove('hidden');
-    document.getElementById('toggleOpenContainer').classList.remove('hidden');
-    document.getElementById('toggleCollapseContainer').classList.add('hidden');
-    addListItems();
-  };
-  // iterate through sidebar list items to add/toggle class
-  const addListItems = () => {
-    for (let i = 0; i < document.querySelectorAll('#sidebarList>li').length; i++) {
-      document.querySelectorAll('#sidebarList>li>a')[i].classList.add('hidden');
-      document.querySelectorAll('#sidebarList>li>button')[i].classList.add('hidden');
-      document.querySelectorAll('#sidebarList>li')[i].classList.add('sidebar-item-collapsed');
-      document.querySelectorAll('#sidebarList>li>img')[i].classList.add('sidebar-thumbnail-collapsed');
-    }
-  };
-  const toggleListItems = () => {
-    for (let i = 0; i < document.querySelectorAll('#sidebarList>li').length; i++) {
-      document.querySelectorAll('#sidebarList>li>a')[i].classList.toggle('hidden');
-      document.querySelectorAll('#sidebarList>li>button')[i].classList.toggle('hidden');
-      document.querySelectorAll('#sidebarList>li')[i].classList.toggle('sidebar-item-collapsed');
-      document.querySelectorAll('#sidebarList>li>img')[i].classList.toggle('sidebar-thumbnail-collapsed');
-    }
-  };
-
-  // store reusable sidebar elements
-  let sidebar = document.getElementById('mySideBar');
-  let main = document.getElementById('main');
-  let toggleCollapseContainer = document.getElementById('toggleCollapseContainer')
-  let toggleOpenContainer = document.getElementById('toggleOpenContainer');
-  
-  // handle onclick for toggling collapse
-  const toggleCollapse = () => {
-    sidebar.classList.toggle('sidebar-opened');
-    main.classList.toggle('main-opened');
-    toggleCollapseContainer.classList.toggle('hidden');
-    toggleOpenContainer.classList.toggle('hidden');
-    toggleListItems();
-  };
-
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth)
   const { saved } = useSelector(state => state.twitches)
-
-  // fetch user data
+  // fetch user data when saved changes
   useEffect(() => {
-    if (user) {
+    if (saved.length !== 0) {
       dispatch(getUserData());
     }
+    console.log(saved);
   }, [saved]);
-  
-  // set state of sidebar contingent on user data
+  // sidebar effects
   useEffect(() => {
+    let sidebar = document.getElementById('mySideBar');
+    let main = document.getElementById('main');
+    let toggleOpenContainer = document.getElementById('toggleOpenContainer');
+    let toggleCollapseContainer = document.getElementById('toggleCollapseContainer');
+    let sidebarListItems = document.querySelectorAll('#sidebarList>li')
+    let sidebarImg = document.querySelectorAll('#sidebarList>li>img')
+    let sideBarLink = document.querySelectorAll('#sidebarList>li>a')
+    let sideBarRemoveBtn = document.querySelectorAll('#sidebarList>li>button')
+    // sidebar helper functions
+    const removeSideBar = () => {
+      main.classList.remove('main-collapsed');
+      main.classList.remove('main-opened');
+      sidebar.classList.remove('sidebar-opened');
+      sidebar.classList.add('hidden');
+    };
+    const addSideBar = () => {
+      main.classList.add('main-collapsed');
+      sidebar.classList.remove('sidebar-opened');
+      sidebar.classList.remove('hidden');
+      toggleOpenContainer.classList.remove('hidden');
+      toggleCollapseContainer.classList.add('hidden');
+      addListItems();
+    };
+    // iterate through sidebar list items to add class
+    const addListItems = () => {
+      for (let i = 0; i < document.querySelectorAll('#sidebarList>li').length; i++) {
+        sidebarListItems[i].classList.add('sidebar-item-collapsed');
+        sidebarImg[i].classList.add('sidebar-thumbnail-collapsed');
+        sideBarLink[i].classList.add('hidden');
+        sideBarRemoveBtn[i].classList.add('hidden');
+      }
+    };
+  // set state of sidebar contingent on user data
     if(!user) {
       removeSideBar();
     }
@@ -77,7 +61,23 @@ function SideBar() {
       addSideBar();
     }
   }, [user]);
-
+  // handle onclick for toggle collapse button
+  const toggleCollapse = () => {
+    document.getElementById('mySideBar').classList.toggle('sidebar-opened');
+    document.getElementById('main').classList.toggle('main-opened');
+    document.getElementById('toggleCollapseContainer').classList.toggle('hidden');
+    document.getElementById('toggleOpenContainer').classList.toggle('hidden');
+    toggleListItems();
+  };
+  // iterate through sidebar list items to toggle class
+  const toggleListItems = () => {
+    for (let i = 0; i < document.querySelectorAll('#sidebarList>li').length; i++) {
+      document.querySelectorAll('#sidebarList>li>a')[i].classList.toggle('hidden');
+      document.querySelectorAll('#sidebarList>li>button')[i].classList.toggle('hidden');
+      document.querySelectorAll('#sidebarList>li')[i].classList.toggle('sidebar-item-collapsed');
+      document.querySelectorAll('#sidebarList>li>img')[i].classList.toggle('sidebar-thumbnail-collapsed');
+    }
+  };
   // handle unsaving profile from sidebar
   const handleUnsave = (e) => {
     const removeId = e.target.dataset.remove

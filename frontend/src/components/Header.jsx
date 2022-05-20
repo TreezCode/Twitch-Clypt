@@ -13,7 +13,6 @@ function Header() {
 
   const onLogout = () => {
     dispatch(twitchReset());
-    dispatch(authReset());
     dispatch(logout());
     navigate('/');
   };
