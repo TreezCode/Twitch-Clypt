@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import TwitchItem from '../components/TwitchItem';
 import Spinner from '../components/Spinner';
 import { twitchReset } from '../features/twitches/twitchSlice';
-import { getUserData } from '../features/auth/authSlice';
 
 function TwitchDashboard() {
   const navigate = useNavigate();
@@ -22,9 +21,6 @@ function TwitchDashboard() {
     }
     if (!user) {
       navigate('/login');
-    }
-    return () => {
-      console.log(twitches?.saved);
     }
   }, [user, isError, message, navigate, dispatch]);
 
