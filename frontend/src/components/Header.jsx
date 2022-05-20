@@ -13,6 +13,7 @@ function Header() {
 
   const onLogout = () => {
     dispatch(twitchReset());
+    dispatch(authReset());
     dispatch(logout());
     navigate('/');
   };
@@ -29,7 +30,7 @@ function Header() {
   return (
     <header className="header" id='myHeader'>
       <div className="logo">
-        <Link to="/login">Twitch Clypt</Link>
+        <Link to="/">Twitch Clypt</Link>
       </div>
       {user ? (
         <SearchForm />

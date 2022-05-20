@@ -14,7 +14,6 @@ function SideBar() {
     if (saved.length !== 0) {
       dispatch(getUserData());
     }
-    console.log(saved);
   }, [saved]);
   // sidebar effects
   useEffect(() => {
