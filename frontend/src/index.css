@@ -459,7 +459,7 @@ img {
 }
 
 .sidebar-item:hover {
-  transform: scale(0.98);
+  transform: scale(0.95);
   color: var(--font);
   box-shadow: inset rgba(135, 38, 245, 0.356) 7px 0px 5px,
     inset rgba(111, 14, 201, 0.473) -7px 0px 12px,

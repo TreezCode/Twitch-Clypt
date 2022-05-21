@@ -17,6 +17,7 @@ function SideBar() {
   }, [saved]);
   // sidebar effects
   useEffect(() => {
+    // store variables only accessible after DOM renders
     let sidebar = document.getElementById('mySideBar');
     let main = document.getElementById('main');
     let toggleOpenContainer = document.getElementById('toggleOpenContainer');
@@ -33,6 +34,7 @@ function SideBar() {
       sidebar.classList.add('hidden');
     };
     const addSideBar = () => {
+      main.classList.remove('main-opened');
       main.classList.add('main-collapsed');
       sidebar.classList.remove('sidebar-opened');
       sidebar.classList.remove('hidden');
@@ -49,7 +51,7 @@ function SideBar() {
         sideBarRemoveBtn[i].classList.add('hidden');
       }
     };
-  // set state of sidebar contingent on user data
+    // set state of sidebar contingent on user data
     if(!user) {
       removeSideBar();
     }

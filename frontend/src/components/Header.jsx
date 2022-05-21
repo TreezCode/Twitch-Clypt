@@ -17,7 +17,7 @@ function Header() {
     dispatch(logout());
     navigate('/');
   };
-
+  
   useEffect(() => {
     if(!user) {
       document.querySelector('#myHeader').classList.add('header-logged-out')

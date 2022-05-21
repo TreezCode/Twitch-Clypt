@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaSignInAlt } from 'react-icons/fa';
 import Spinner from '../components/Spinner';
-import { login, authReset, getUserData } from '../features/auth/authSlice';
+import { login, authReset } from '../features/auth/authSlice';
 
 function Login() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function Login() {
     if (isError) {
       toast.error(message);
     }
-    if (isSuccess && user) {
+    if (isSuccess && user || user) {
       navigate('/');
     }
     dispatch(authReset());

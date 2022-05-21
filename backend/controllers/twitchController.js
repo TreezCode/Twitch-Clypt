@@ -12,7 +12,7 @@ const getTwitch = asyncHandler(async (req, res) => {
     res.status(400)
     throw Error('Please add a Twitch to the text field')
   }
-  const response = await fetchTwitchByName(name, res).then(result => result)
+  const response = await fetchTwitchByName(name, res).then((result) => result)
   if (!response) {
     res.status(400)
     throw Error('No Twitch profile found')
@@ -43,7 +43,9 @@ const saveTwitch = asyncHandler(async (req, res) => {
   }
   // check if Twitch profile exists in our database
   let twitchId = req.params.id
-  const twitchExists = loggedIn.twitches.find(twitch => twitch._id.toString() === twitchId)
+  const twitchExists = loggedIn.twitches.find(
+    (twitch) => twitch._id.toString() === twitchId
+  )
   if (twitchExists) {
     res.status(400)
     throw new Error(`Twitch profile has already been saved`)
@@ -55,10 +57,16 @@ const saveTwitch = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       loggedIn._id,
       {
-        $addToSet: { twitches: { _id: twitch._id, name: twitch.display_name, image_url: twitch.profile_image_url } },
+        $addToSet: {
+          twitches: {
+            _id: twitch._id,
+            name: twitch.display_name,
+            image_url: twitch.profile_image_url,
+          },
+        },
       },
       { new: true }
-    )
+    ).select('-password')
     console.log(
       `${loggedIn.name} saved ${twitch.display_name}'s Twitch profile`.yellow
     )
@@ -81,7 +89,9 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
   try {
     // check if Twitch profile exists
     let twitchId = req.params.id
-    const twitchExists = loggedIn.twitches.find(twitch => twitch.id === twitchId)
+    const twitchExists = loggedIn.twitches.find(
+      (twitch) => twitch.id === twitchId
+    )
     if (!twitchExists) {
       res.status(400)
       throw new Error(`Twitch profile has already been removed`)
@@ -91,7 +101,7 @@ const unsaveTwitch = asyncHandler(async (req, res) => {
       loggedIn._id,
       { $pull: { twitches: { _id: twitchId } } },
       { new: true }
-    )
+    ).select('-password')
     console.log(
       `${loggedIn.name} removed ${twitchExists.name}'s Twitch profile`.yellow
     )
