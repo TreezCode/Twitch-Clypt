@@ -1,0 +1,104 @@
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= SearchBar Component -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.search-form .form-group,
+.search-form input {
+  margin: 0;
+}
+
+.search-form form {
+  width: 80%;
+}
+
+.search-form input {
+  padding: 4px 7px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.input-icons {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.clear-icon-wrapper {
+  display: inline-flex;
+  border-right: 1px solid rgb(165, 165, 165);
+}
+
+.clear-icon,
+.search-icon {
+  transition: 0.3s;
+  width: 18px;
+  height: 18px;
+}
+
+.search-icon-btn {
+  background: none;
+  border: none;
+}
+
+.search-icon {
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.clear-icon {
+  margin-right: 0.5rem;
+  color: #a970ff;
+}
+
+.search-icon:hover {
+  transform: scale(1.2);
+}
+
+.clear-icon:hover {
+  color: #6b6b6b;
+  transform: scale(0.8);
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-=  Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+@media (max-width: 768px) {
+  .search-form form {
+    width: 90%;
+  }
+  .search-form input {
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 600px) {
+  .search-form form {
+    width: 100%;
+  }
+  .search-input {
+    font-size: 0.75em;
+  }
+  .input-icons {
+    top: 6px;
+  }
+}
+@media (max-width: 507px) {
+  .search-input {
+    font-size: 0.7em;
+  }
+  .input-icons {
+    top: 5px;
+  }
+}
+@media (max-width: 300px) {
+  .search-form {
+    margin-left: 0.25rem;
+  }
+  .search-form form {
+    width: 100%;
+  }
+}

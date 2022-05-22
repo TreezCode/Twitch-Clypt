@@ -1,6 +1,7 @@
 import React from 'react';
 import { FcSearch } from 'react-icons/fc';
 import { IoMdClose } from 'react-icons/io';
+import './SearchBar.css';
 
 function SearchBar({
   placeholder,
@@ -31,8 +32,8 @@ function SearchBar({
           ) : (
             ''
           )}
-          <button className='search-icon-btn' type='submit' onClick={onSubmit}>
-            <FcSearch className='search-icon' />
+          <button className="search-icon-btn" type="submit" onClick={onSubmit}>
+            <FcSearch className="search-icon" />
           </button>
         </div>
       </div>

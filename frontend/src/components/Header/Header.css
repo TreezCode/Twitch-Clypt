@@ -1,0 +1,196 @@
+.header {
+  position: fixed;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 3fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 8px 14px;
+  border-bottom: 1px solid;
+  margin-bottom: 60px;
+  z-index: 50;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-bottom-color: var(--header-borderbottom);
+  background-color: var(--background);
+}
+
+.header-logged-out {
+  grid-template-columns: 1fr 1fr;
+}
+
+.header ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header ul li a {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.header ul li a svg {
+  margin-right: 5px;
+}
+
+.logo {
+  margin-left: 0.5rem;
+}
+
+.logo,
+.channels-link,
+.clips-link {
+  font-size: 1.1rem;
+  margin-right: 1rem;
+}
+
+.user-link,
+.home-link,
+.auth-links {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
+
+.logo a,
+.home-link a,
+.user-link a {
+  display: flex;
+  align-items: center;
+}
+
+.header-fa-twitch {
+  color: #a970ff;
+  width: 2rem;
+  height: 2rem;
+  transition: 0.2s;
+}
+
+.header-ai-home,
+.header-ai-setting {
+  color: #a970ff;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+.logo a svg:hover,
+.channels-link a:hover,
+.clips-link a:hover {
+  color: #b98efa;
+  transform: scale(1.1);
+}
+
+.user-link a:hover,
+.home-link a:hover {
+  color: var(--header-hover);
+}
+
+.header ul li a:hover {
+  color: var(--header-hover);
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Button -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.btn {
+  padding: 8px 12px;
+  border: 1px solid;
+  border-radius: 5px;
+  border-color: var(--btn-border);
+  background: var(--btn-background);
+  color: var(--btn-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  appearance: button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+  transition: all 0.5s;
+}
+
+.btn svg {
+  margin-right: 6px;
+}
+
+.btn-block {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-reverse {
+  background: var(--btn-background-reverse);
+  color: var(--btn-font-reverse);
+}
+
+.btn:hover {
+  transform: scale(0.98);
+  box-shadow: none;
+  color: var(--header-hover);
+}
+
+.btn:active {
+  border: 1px solid grey;
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-=  Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+@media (max-width: 768px) {
+  .home-link,
+  .user-link {
+    justify-content: center;
+  }
+  .home-link-text,
+  .user-link-text {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .logo {
+    margin-left: 0;
+  }
+  .header .btn {
+    padding: 6px 10px;
+  }
+  .header-links-clips {
+    margin-left: 0.5rem;
+  }
+  .header-fa-twitch {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .header-ai-home,
+  .header-ai-setting {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+@media (max-width: 450px) {
+  .user-link-text,
+  .logout-btn-text {
+    display: none;
+  }
+  .user-link a {
+    justify-content: center;
+  }
+  .logout-btn svg {
+    margin-right: 0;
+  }
+}
+@media (max-width: 420px) {
+  .heading {
+    padding: 5px;
+    margin-bottom: 20px;
+  }
+  .form,
+  .content {
+    width: 100%;
+  }
+  .header .btn {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}

@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { BsArrowBarLeft, BsArrowBarRight } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserData } from '../features/auth/authSlice';
-import { getTwitch, unsaveTwitch } from '../features/twitches/twitchSlice';
+import { getUserData } from '../../features/auth/authSlice';
+import { getTwitch, unsaveTwitch } from '../../features/twitches/twitchSlice';
+import './SideBar.css'
 
 function SideBar() {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ function SideBar() {
     };
     // iterate through sidebar list items to add class
     const addListItems = () => {
-      for (let i = 0; i < document.querySelectorAll('#sidebarList>li').length; i++) {
+      for (let i = 0; i < sidebarListItems.length; i++) {
         sidebarListItems[i].classList.add('sidebar-item-collapsed');
         sidebarImg[i].classList.add('sidebar-thumbnail-collapsed');
         sideBarLink[i].classList.add('hidden');
@@ -102,6 +103,9 @@ function SideBar() {
         <div className="toggle-open-btn toggle-btn" id="sidebarOpenBtn">
           <BsArrowBarRight size={'1.5rem'} onClick={toggleCollapse} />
         </div>
+      </div>
+      <div className="custom-toggle-container">
+        <input type="checkbox" id='customToggle' />
       </div>
       <article className="sidebar-content">
         <ul className="sidebar-list" id="sidebarList">

@@ -1,0 +1,117 @@
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Form -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+.form,
+.content {
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 10px;
+}
+
+.auth-form .form-group {
+  margin-bottom: 10px;
+}
+
+.auth-form .form-group input,
+.auth-form .form-group textarea,
+.auth-form .form-group select {
+  width: 100%;
+  border: 1px solid;
+  border-radius: 5px;
+  font-family: inherit;
+  border-color: var(--textarea-border);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.8);
+}
+
+.auth-form .form-group input:focus,
+.auth-form .form-group textarea:focus,
+.auth-form .form-group select:focus {
+  outline: var(--textarea-focus);
+}
+
+.auth-form .form-group input {
+  background: #0a0a0a;
+  color: white;
+  padding: 10px;
+}
+
+.auth-form .form-group input:-webkit-autofill,
+.auth-form .form-group input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+  color: white;
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Heading -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.heading {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 50px;
+  padding: 0 20px;
+  color: var(--font);
+}
+
+.heading p {
+  color: var(--heading-paragraph);
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Button -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.btn {
+  padding: 8px 12px;
+  border: 1px solid;
+  border-radius: 5px;
+  border-color: var(--btn-border);
+  background: var(--btn-background);
+  color: var(--btn-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  appearance: button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+  transition: all 0.5s;
+}
+
+.btn svg {
+  margin-right: 6px;
+}
+
+.btn-block {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-reverse {
+  background: var(--btn-background-reverse);
+  color: var(--btn-font-reverse);
+}
+
+.btn:hover {
+  transform: scale(0.98);
+  box-shadow: none;
+  color: var(--header-hover);
+}
+
+.btn:active {
+  border: 1px solid grey;
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Pages Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+@media (max-width: 600px) {
+  .form,
+  .content {
+    width: 90%;
+  }
+  .header .btn {
+    padding: 6px 10px;
+  }
+  .heading h1 {
+    font-size: 2rem;
+  }
+  .heading p {
+    font-size: 1.5rem;
+  }
+}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getTwitch } from '../features/twitches/twitchSlice';
-import SearchBar from './SearchBar';
+import { getTwitch } from '../../features/twitches/twitchSlice';
+import SearchBar from '../SearchBar/SearchBar';
+import './TwitchForm.css'
 
-function SearchForm() {
+function TwitchForm() {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
 
@@ -22,7 +23,7 @@ function SearchForm() {
       <form>
         <div className="form-group">
           <SearchBar
-            placeholder="Search Twitch"
+            placeholder="Search Channels"
             name="name"
             id="name"
             value={name}
@@ -36,4 +37,4 @@ function SearchForm() {
   );
 }
 
-export default SearchForm;
+export default TwitchForm;

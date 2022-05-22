@@ -1,0 +1,88 @@
+.content {
+  color: var(--font);
+}
+
+.twitch {
+  padding: 1rem;
+  background: var(--twitch-background);
+  border-radius: 0.5%;
+  border: 1px solid #2e2e2e;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.twitch-name {
+  letter-spacing: 1px;
+}
+
+.twitch-profile-pic {
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: var(--purple-glow-lg);
+  transition: all 0.5s;
+}
+
+.twitch-profile-pic:hover {
+  transform: scale(0.98);
+  box-shadow: var(--purple-glow-sm);
+}
+
+.twitch-about {
+  background: #383838;
+  border-radius: 5px;
+  border: 1px solid #0c0c0c;
+  padding: 1rem;
+  font-size: 0.95rem;
+}
+
+.favorite-icon-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.favorite-icon,
+.favorite-close {
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+  transition: all 0.5s;
+}
+
+.favorite-icon {
+  color: #eb2748;
+}
+
+.favorite-close {
+  color: white;
+}
+
+.favorite-icon:hover,
+.favorite-close:hover {
+  transform: scale(0.8);
+}
+
+.favorite-icon:hover {
+  color: #701424;
+}
+
+.favorite-close:hover {
+  color: rgb(133, 133, 133);
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fa-twitch {
+  color: #a970ff;
+  margin-bottom: 5px;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.go-verified {
+  color: rgb(30, 125, 255);
+  position: relative;
+  left: 5px;
+}

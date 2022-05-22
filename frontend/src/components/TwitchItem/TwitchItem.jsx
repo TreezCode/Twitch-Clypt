@@ -9,7 +9,8 @@ import {
   saveTwitch,
   unsaveTwitch,
   twitchReset,
-} from '../features/twitches/twitchSlice';
+} from '../../features/twitches/twitchSlice';
+import './TwitchItem.css'
 
 function TwitchItem({ twitch }) {
   const dispatch = useDispatch();

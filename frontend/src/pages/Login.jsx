@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaSignInAlt } from 'react-icons/fa';
-import Spinner from '../components/Spinner';
+import Spinner from '../components/Spinner/Spinner';
 import { login, authReset } from '../features/auth/authSlice';
+import './Pages.css';
 
 function Login() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function Login() {
             </h1>
             <p>Login to save Twitch clips</p>
           </section>
-          <section className="form">
+          <section className="form auth-form">
             <form onSubmit={onSubmit}>
               <div className="form-group">
                 <input

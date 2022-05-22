@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import TwitchItem from '../components/TwitchItem';
-import Spinner from '../components/Spinner';
+import TwitchItem from '../components/TwitchItem/TwitchItem';
+import Spinner from '../components/Spinner/Spinner';
 import { twitchReset } from '../features/twitches/twitchSlice';
+import './Pages.css';
 
 function TwitchDashboard() {
   const navigate = useNavigate();
@@ -31,8 +32,7 @@ function TwitchDashboard() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.name}</h1>
-        <p>Twitch Dashboard</p>
+        <p>Channels Dashboard</p>
       </section>
       <section className="content">
         {twitches.id ? (
