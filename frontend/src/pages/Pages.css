@@ -3,7 +3,6 @@
 .content {
   width: 70%;
   margin: 0 auto;
-  padding-bottom: 10px;
 }
 
 .auth-form .form-group {
@@ -97,6 +96,25 @@
 .btn:active {
   border: 1px solid grey;
 }
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= User Dashboard -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.heading-user-dashboard {
+  margin-bottom: 2rem;
+}
+
+.content-user-dashboard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.twitches-title,
+.clips-title {
+  color: var(--font);
+}
+
+
 
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Pages Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 

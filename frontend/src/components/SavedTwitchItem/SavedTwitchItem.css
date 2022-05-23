@@ -1,0 +1,26 @@
+.content-user-dashboard .twitches {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.content-user-dashboard .twitches .twitch {
+  height: 15rem;
+  width: 10rem;
+  margin: 1em;
+  overflow: hidden;
+  background: var(--twitch-background);
+  border-radius: 0.5%;
+  border: 1px solid #2e2e2e;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.content-user-dashboard .twitches .clip {
+  height: 200px;
+  width: 90%;
+  margin: 1em;
+  background: var(--twitch-background);
+  border-radius: 0.5%;
+  border: 1px solid #2e2e2e;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

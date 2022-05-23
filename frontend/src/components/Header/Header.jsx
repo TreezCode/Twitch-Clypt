@@ -32,18 +32,13 @@ function Header() {
   }, [user, location]);
 
   const handlePageLogic = () => {
-    if(location.pathname === '/') {
-      return (<div></div>)
-    }
     if(location.pathname === '/twitchdashboard') {
       return (<TwitchForm />)
     }
     if(location.pathname === '/clipdashboard') {
       return (<ClipForm />)
     }
-    if(location.pathname === '/settings') {
-      return (<div></div>)
-    }
+    return (<div></div>)
   }
 
   return (

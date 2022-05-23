@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
 /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 * {
   margin: 0;
@@ -68,7 +68,7 @@ img {
   text-align: center;
 }
 
-/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -106,7 +106,7 @@ body:hover {
   color: var(--scrollbar-thumb);
 }
 
-/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Global Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Media Queries -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
 
 @media (max-width: 420px) {
   .container {
@@ -116,7 +116,7 @@ body:hover {
   }
 }
 
-  /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Color Themes Start -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+  /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Color Themes -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
   :root {
     --font: #fff;
     --link: #fff;
@@ -153,4 +153,3 @@ body:hover {
   
   [data-theme='light'] {}
   
-  /* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Color Themes End -=-=-=-=-=-=-=-=-=-=-=-=-=-= */

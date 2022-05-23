@@ -124,7 +124,7 @@ const getSavedTwitch = asyncHandler(async (req, res) => {
   try {
     let profileIds = loggedIn.twitches
     const profiles = await Twitch.find({ _id: { $in: profileIds } })
-    res.status(200).json({ saved: profiles })
+    res.status(200).json(profiles)
   } catch (error) {
     res.status(500)
     throw new Error(error.message)

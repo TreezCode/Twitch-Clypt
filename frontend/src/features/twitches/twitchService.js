@@ -32,10 +32,22 @@ const unsaveTwitch = async (twitchId, token) => {
   return response.data;
 };
 
+// Get saved Twitch Profile
+const getSavedTwitch = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + 'saved', config);
+  return response.data;
+};
+
 const twitchService = {
   getTwitch,
   saveTwitch,
   unsaveTwitch,
+  getSavedTwitch,
 };
 
 export default twitchService;
