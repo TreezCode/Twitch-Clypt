@@ -1,26 +1,77 @@
+.content-user-dashboard .clips,
 .content-user-dashboard .twitches {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  height: 80vh;
+  overflow: auto;
+  margin: 1rem;
+  padding: 0 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #a970ff9f;
+  background-color: rgb(10, 10, 10);
+  box-shadow: inset rgba(0, 0, 0, 0.8) 0px 10px 15px;
+  transition: 0.3s;
 }
 
 .content-user-dashboard .twitches .twitch {
+  color: white;
   height: 15rem;
   width: 10rem;
-  margin: 1em;
+  margin: 1rem;
   overflow: hidden;
   background: var(--twitch-background);
-  border-radius: 0.5%;
-  border: 1px solid #2e2e2e;
+  border-radius: 10px;
+  border: 1px solid #a970ff34;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.content-user-dashboard .twitches .twitch:hover {
+  transform: scale(0.98);
 }
 
 .content-user-dashboard .twitches .clip {
-  height: 200px;
+  color: white;
+  height: 250px;
   width: 90%;
   margin: 1em;
   background: var(--twitch-background);
   border-radius: 0.5%;
-  border: 1px solid #2e2e2e;
+  border: 1px solid #a970ff34;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: pointer;
+}
+
+.content-user-dashboard .twitch-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twitches-container {
+  overflow: auto;
+  height: 80vh;
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-= Scrollbar -=-=-=-=-=-=-=-=-=-=-=-=-=-= */
+
+.content-user-dashboard .clips::-webkit-scrollbar-track,
+.content-user-dashboard .twitches::-webkit-scrollbar-track {
+  background-color: var(--background);
+}
+
+.content-user-dashboard .clips::-webkit-scrollbar,
+.content-user-dashboard .twitches::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.content-user-dashboard .clips,
+.content-user-dashboard .twitches {
+  color: var(--background);
+}
+
+.content-user-dashboard .clips:hover,
+.content-user-dashboard .twitches:hover {
+  color: #a970ff5e;
 }

@@ -5,9 +5,10 @@ import { FaSignInAlt, FaSignOutAlt, FaUser, FaTwitch } from 'react-icons/fa';
 import { AiFillSetting, AiFillHome } from 'react-icons/ai';
 import { logout, authReset } from '../../features/auth/authSlice';
 import { twitchReset } from '../../features/twitches/twitchSlice';
+import { clipReset } from '../../features/clips/clipSlice';
 import TwitchForm from '../TwitchForm/TwitchForm';
 import ClipForm from '../ClipForm/ClipForm';
-import './Header.css'
+import './Header.css';
 
 function Header() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function Header() {
 
   const onLogout = () => {
     dispatch(twitchReset());
+    dispatch(clipReset());
     dispatch(authReset());
     dispatch(logout());
     navigate('/login');
@@ -32,14 +34,14 @@ function Header() {
   }, [user, location]);
 
   const handlePageLogic = () => {
-    if(location.pathname === '/twitchdashboard') {
-      return (<TwitchForm />)
+    if (location.pathname === '/twitchdashboard') {
+      return <TwitchForm />;
     }
-    if(location.pathname === '/clipdashboard') {
-      return (<ClipForm />)
+    if (location.pathname === '/clipdashboard') {
+      return <ClipForm />;
     }
-    return (<div></div>)
-  }
+    return <div></div>;
+  };
 
   return (
     <header className="header" id="myHeader">
@@ -51,14 +53,10 @@ function Header() {
       {user ? (
         <>
           <div className="channels-link">
-            <Link to="/twitchdashboard">
-              <a href="">Channels</a>
-            </Link>
+            <Link to="/twitchdashboard">Channels</Link>
           </div>
           <div className="clips-link">
-            <Link to="/clipdashboard">
-              <a href="">Clips</a>
-            </Link>
+            <Link to="/clipdashboard">Clips</Link>
           </div>
           {handlePageLogic()}
           <div className="home-link">

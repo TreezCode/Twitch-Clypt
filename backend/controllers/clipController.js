@@ -29,7 +29,7 @@ const getClips = asyncHandler(async (req, res) => {
       res.status(400)
       throw Error('No Twitch profile or game with that name found')
     }
-    // if only twitch profile exists
+    // if only twitch clips exists
     if (!gameResponse) {
       let twitchName = twitchResponse.display_name
       // configure http request

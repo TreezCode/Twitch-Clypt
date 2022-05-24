@@ -40,7 +40,7 @@ function TwitchDashboard() {
             <TwitchItem twitch={twitches} />
           </div>
         ) : (
-          <h3>Search a Twitch Channel...</h3>
+          <h3>Search for a Channel...</h3>
         )}
       </section>
     </>

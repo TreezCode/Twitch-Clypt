@@ -22,7 +22,9 @@ function UserDashboard() {
       toast.error(message);
       dispatch(twitchReset());
     }
-    dispatch(getSavedTwitch());
+    if(user) {
+      dispatch(getSavedTwitch());
+    }
   }, []);
 
   useEffect(() => {
@@ -38,23 +40,13 @@ function UserDashboard() {
   return (
     <>
       <section className="heading heading-user-dashboard">
-        <p>Favorites</p>
+        <h1>Welcome {user?.name}</h1>
       </section>
-      <section className="content content-user-dashboard">
-        <h4 className="twitches-title">Twitches</h4>
-        <h4 className="clips-title">Clips</h4>
+      <section className="content-user-dashboard">
+        <h4 className="twitches-title">Favorite Clips</h4>
+        <h4 className="clips-title">Favorite Channels</h4>
         {twitches.length > 0 ? (
-          <div className="twitches">
-            {twitches.map((twitch) => (
-              <SavedTwitchItem key={twitch._id} twitch={twitch} />
-              // <div key={twitch._id} className="twitch">Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...Saved profile...</div>
-            ))}
-          </div>
-        ) : (
-          <h3>No saved Twitch profiles here...</h3>
-        )}
-        {twitches.length > 0 ? (
-          <div className="twitches">
+          <div className="twitches clips">
             {twitches.map((twitch) => (
               // <SavedTwitchItem key={twitch._id} twitch={twitch} />
               <div key={twitch._id} className="clip">Saved Clip...</div>
@@ -62,6 +54,15 @@ function UserDashboard() {
           </div>
         ) : (
           <h3>No saved Twitch clips here...</h3>
+        )}
+        {twitches.length > 0 ? (
+          <div className="twitches">
+            {twitches.map((twitch) => (
+              <SavedTwitchItem key={twitch._id} twitch={twitch} />
+            ))}
+          </div>
+        ) : (
+          <h3>No saved Twitch profiles here...</h3>
         )}
       </section>
     </>

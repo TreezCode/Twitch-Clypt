@@ -5,8 +5,12 @@ import { GoVerified } from 'react-icons/go';
 import { IoMdClose } from 'react-icons/io';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { abbreviateNumber } from 'js-abbreviation-number';
-import { saveTwitch, unsaveTwitch, twitchReset } from '../../features/twitches/twitchSlice';
-import './SavedTwitchItem.css'
+import {
+  saveTwitch,
+  unsaveTwitch,
+  twitchReset,
+} from '../../features/twitches/twitchSlice';
+import './SavedTwitchItem.css';
 
 function SavedTwitchItem({ twitch }) {
   const dispatch = useDispatch();
@@ -31,28 +35,28 @@ function SavedTwitchItem({ twitch }) {
     (favorite) => favorite._id === twitch._id,
   );
 
-  const backgroundURL = 'url' + '(' + twitch.profile_image_url + ')'
+  const backgroundURL =
+    'linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),' +
+    'url' +
+    '(' +
+    twitch.profile_image_url +
+    ')';
   const savedTwitchStyle = {
     backgroundImage: backgroundURL,
-    backgroundPosition: "center",
-    backgroundSize: "100px 100px",
-    backgroundRepeat: "repeat",
-  }
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    // backgroundSize: "100px 100px",
+    // backgroundRepeat: "repeat",
+  };
 
   return (
     <div className="twitch" style={savedTwitchStyle}>
-      <div className="favorite-icon-wrapper">
-        {favorited ? (
-          <MdFavorite className="favorite-icon" onClick={handleUnsave} />
-        ) : (
-          <MdFavoriteBorder className="favorite-icon" onClick={handleSave} />
-        )}
-      </div>
       <h2 className="twitch-name">{twitch.display_name}</h2>
       {twitch.broadcaster_type.length !== 0 ? (
         <>
           <p className="icon-wrapper">
-            Twitch {twitch.broadcaster_type}
+            {twitch.broadcaster_type}
             <GoVerified className="go-verified" />
           </p>
         </>
@@ -61,15 +65,12 @@ function SavedTwitchItem({ twitch }) {
       )}
       <p>{followers} followers</p>
       <br />
-      <a href={twitchLink} target="_blank">
-
-      </a>
+      <a href={twitchLink} target="_blank"></a>
       <div className="icon-wrapper">
         <FaTwitch className="fa-twitch" />
       </div>
       <h4>Twitch views :</h4>
       <p>{twitch.view_count.toLocaleString('en-US')}</p>
-
     </div>
   );
 }

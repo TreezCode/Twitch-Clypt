@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getTwitch } from '../../features/twitches/twitchSlice';
+import { getClip } from '../../features/clips/clipSlice';
 import SearchBar from '../SearchBar/SearchBar';
 import './ClipForm.css';
 
@@ -10,7 +10,7 @@ function ClipForm() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(getTwitch({ name }));
+    dispatch(getClip({ name }));
     setName('');
   };
 
