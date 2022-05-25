@@ -2,8 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTwitch } from 'react-icons/fa';
 import { GoVerified } from 'react-icons/go';
-import { IoMdClose } from 'react-icons/io';
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { abbreviateNumber } from 'js-abbreviation-number';
 import {
   saveTwitch,
@@ -15,16 +13,6 @@ import './SavedTwitchItem.css';
 function SavedTwitchItem({ twitch }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-
-  const handleSave = () => {
-    dispatch(saveTwitch(twitch._id));
-  };
-  const handleUnsave = () => {
-    dispatch(unsaveTwitch(twitch._id));
-  };
-  const handleClose = () => {
-    dispatch(twitchReset());
-  };
 
   const twitchJoinDate = new Date(twitch.created_at)
     .toString()
@@ -46,8 +34,6 @@ function SavedTwitchItem({ twitch }) {
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
-    // backgroundSize: "100px 100px",
-    // backgroundRepeat: "repeat",
   };
 
   return (

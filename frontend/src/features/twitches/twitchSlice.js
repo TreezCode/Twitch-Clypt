@@ -135,10 +135,6 @@ export const twitchSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.saved = action.payload;
-        // filter to remove unsaved twitch from UI
-        // state.saved = state.saved.filter(
-        //   (twitch) => twitch._id !== action.payload.twitches._id,
-        // );
       })
       .addCase(unsaveTwitch.rejected, (state, action) => {
         state.isLoading = false;

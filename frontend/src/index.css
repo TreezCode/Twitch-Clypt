@@ -134,7 +134,7 @@ body:hover {
     --btn-background-reverse: #fff;
     --btn-font-reverse: #000;
     --spinner-background: rgba(0, 0, 0, 0.5);
-    --spinner: #000 transparent #555 transparent;
+    --spinner:#000 transparent rgb(169, 112, 255) transparent;
     --sidebar-background: rgb(100, 100, 100);
     --twitch-background: #1b1b1b;
     --scrollbar-thumb: rgb(51, 51, 51);

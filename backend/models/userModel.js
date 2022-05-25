@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema(
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Clip' },
         name: { type: String, required: true },
+        slug: { type: String, required: true },
       },
       {
         timestamps: true,

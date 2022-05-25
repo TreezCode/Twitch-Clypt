@@ -6,8 +6,9 @@
   padding: 1rem;
   background: var(--twitch-background);
   border-radius: 0.5%;
-  border: 1px solid #2e2e2e;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border: 1px solid #a970ff44;
+  background-color: rgb(10, 10, 10);
+  box-shadow: rgba(0, 0, 0, 0.7) 2px 2px 15px;
 }
 
 .twitch-name {
@@ -27,11 +28,13 @@
 }
 
 .twitch-about {
-  background: #383838;
-  border-radius: 5px;
-  border: 1px solid #0c0c0c;
   padding: 1rem;
   font-size: 0.95rem;
+  background: #1b1b1b;
+  border: 1px solid #a970ff3f;
+  border-radius: 5px;
+  box-shadow: inset rgba(0, 0, 0, 0.7) 0px 5px 15px,
+  inset rgba(0, 0, 0, 0.7) 0px -5px 15px;
 }
 
 .favorite-icon-wrapper {

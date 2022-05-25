@@ -120,6 +120,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user.twitches = action.payload.twitches;
+        state.user.clips = action.payload.clips;
       })
       .addCase(getUserData.rejected, (state, action) => {
         state.isLoading = false;

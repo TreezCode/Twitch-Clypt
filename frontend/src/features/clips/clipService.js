@@ -2,38 +2,38 @@ import axios from 'axios';
 
 const API_URL = '/api/clips/';
 
-// Get Clips from Twitch API
+// Get Clips from Clip API
 const getClip = async (clipData) => {
   const response = await axios.post(API_URL, clipData);
   return response.data;
 };
 
-// Save Twitch Profile
-const saveTwitch = async (twitchId, token) => {
+// Save Clip Profile
+const saveClip = async (clipId, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
   // axios params: url => data => headers
-  const response = await axios.put(API_URL + twitchId, null, config);
+  const response = await axios.put(API_URL + clipId, null, config);
   return response.data;
 };
 
-// Save Twitch Profile
-const unsaveTwitch = async (twitchId, token) => {
+// Save Clip Profile
+const unsaveClip = async (clipId, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
   // axios params: url => data => headers
-  const response = await axios.put(API_URL + '/saved/' + twitchId, null, config);
+  const response = await axios.put(API_URL + '/saved/' + clipId, null, config);
   return response.data;
 };
 
-// Get saved Twitch Profile
-const getSavedTwitch = async (token) => {
+// Get saved Clip Profile
+const getSavedClips = async (token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -45,9 +45,9 @@ const getSavedTwitch = async (token) => {
 
 const clipService = {
   getClip,
-  saveTwitch,
-  unsaveTwitch,
-  getSavedTwitch,
+  saveClip,
+  unsaveClip,
+  getSavedClips,
 };
 
 export default clipService;

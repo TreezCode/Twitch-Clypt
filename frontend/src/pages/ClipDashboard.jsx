@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import ClipItem from '../components/ClipItem/ClipItem';
 import Spinner from '../components/Spinner/Spinner';
+import { getUserData } from '../features/auth/authSlice';
 import { clipReset } from '../features/clips/clipSlice';
 import './Pages.css';
 
@@ -11,9 +12,15 @@ function ClipDashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { clips, isLoading, isError, message } = useSelector(
+  const { clips, saved, isLoading, isError, message } = useSelector(
     (state) => state.clips,
   );
+  // fetch user data when saved changes
+  useEffect(() => {
+    if (saved.length !== 0) {
+      dispatch(getUserData());
+    }
+  }, [saved]);
 
   useEffect(() => {
     if (isError) {

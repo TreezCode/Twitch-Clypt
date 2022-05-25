@@ -31,12 +31,12 @@ export const getClip = createAsyncThunk(
 );
 
 // Save Twitch profile
-export const saveTwitch = createAsyncThunk(
-  'twitches/save',
+export const saveClip = createAsyncThunk(
+  'clips/save',
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await clipService.saveTwitch(id, token);
+      return await clipService.saveClip(id, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -50,12 +50,12 @@ export const saveTwitch = createAsyncThunk(
 );
 
 // Save Twitch profile
-export const unsaveTwitch = createAsyncThunk(
-  'twitches/unsave',
+export const unsaveClip = createAsyncThunk(
+  'clips/unsave',
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await clipService.unsaveTwitch(id, token);
+      return await clipService.unsaveClip(id, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -69,12 +69,12 @@ export const unsaveTwitch = createAsyncThunk(
 );
 
 // Get saved Twitch profiles
-export const getSavedTwitch = createAsyncThunk(
-  'twitches/getSaved',
+export const getSavedClips = createAsyncThunk(
+  'clips/getSaved',
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await clipService.getSavedTwitch(token);
+      return await clipService.getSavedClips(token);
     } catch (error) {
       console.log(error);
       const message =
@@ -115,41 +115,41 @@ export const clipSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(saveTwitch.pending, (state) => {
+      .addCase(saveClip.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(saveTwitch.fulfilled, (state, action) => {
+      .addCase(saveClip.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.saved = action.payload;
       })
-      .addCase(saveTwitch.rejected, (state, action) => {
+      .addCase(saveClip.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(unsaveTwitch.pending, (state) => {
+      .addCase(unsaveClip.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(unsaveTwitch.fulfilled, (state, action) => {
+      .addCase(unsaveClip.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.saved = action.payload;
       })
-      .addCase(unsaveTwitch.rejected, (state, action) => {
+      .addCase(unsaveClip.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getSavedTwitch.pending, (state) => {
+      .addCase(getSavedClips.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getSavedTwitch.fulfilled, (state, action) => {
+      .addCase(getSavedClips.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.twitches = action.payload;
+        state.clips = action.payload;
       })
-      .addCase(getSavedTwitch.rejected, (state, action) => {
+      .addCase(getSavedClips.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

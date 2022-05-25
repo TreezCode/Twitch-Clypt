@@ -3,11 +3,12 @@
 }
 
 .clip {
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.5rem;
+  margin: 1rem 0;
   background: var(--twitch-background);
   border-radius: 0.5%;
   border: 1px solid #a970ff44;
   background-color: rgb(10, 10, 10);
   box-shadow: rgba(0, 0, 0, 0.7) 2px 2px 15px;
+  color: white;
 }
